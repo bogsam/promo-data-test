@@ -1,0 +1,47 @@
+deptrac:
+  paths:
+    - ./app/Modules
+
+  exclude_files:
+    - '#.*/Tests/.*#'
+    - '#^.*_ide_helper\.php$#'
+
+  layers:
+    - name: SharedDomain
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Shared\\Domain\\.*
+
+    - name: SharedApplication
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Shared\\Application\\.*
+
+    - name: SharedInfrastructure
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Shared\\Infrastructure\\.*
+
+    - name: Framework
+      collectors:
+        - type: classLike
+          value: Illuminate\\.*
+        - type: classLike
+          value: Symfony\\.*
+        - type: classLike
+          value: Carbon\\.*
+
+    - name: Vendor
+      collectors:
+        - type: classLike
+          value: ^Psr\\
+
+  ruleset:
+    SharedDomain: []
+    SharedApplication:
+      - SharedDomain
+    SharedInfrastructure:
+      - SharedApplication
+      - SharedDomain
+      - Framework
+      - Vendor

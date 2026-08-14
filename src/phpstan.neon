@@ -1,0 +1,17 @@
+includes:
+    - vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 6
+    paths:
+        - app/Modules
+        - bootstrap
+        - config
+        - routes
+    tmpDir: .phpstan.cache
+    treatPhpDocTypesAsCertain: true
+    reportUnmatchedIgnoredErrors: true
+    excludePaths:
+        analyse:
+            - app/Modules/*/Infrastructure/Database/Migrations
+            - bootstrap/cache
