@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Entities;
 
-use App\Modules\Shared\ValueObjects\Money;
-use App\Modules\Shared\ValueObjects\Id;
+use App\Modules\Shared\Domain\ValueObjects\Id;
+use App\Modules\Shared\Domain\ValueObjects\Money;
 use DateTimeImmutable;
 
 final class Price

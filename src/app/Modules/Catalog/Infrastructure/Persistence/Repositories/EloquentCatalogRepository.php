@@ -5,11 +5,11 @@ declare(strict_types=1);
 namespace App\Modules\Catalog\Infrastructure\Persistence\Repositories;
 
 use App\Modules\Catalog\Domain\Repositories\CatalogRepository;
-use App\Modules\Shared\Contracts\CatalogReader;
-use App\Modules\Shared\Data\ProductData;
-use App\Modules\Shared\ValueObjects\Id;
-use App\Modules\Shared\ValueObjects\Money;
-use App\Modules\Shared\ValueObjects\Period;
+use App\Modules\Shared\Application\Contracts\CatalogReader;
+use App\Modules\Shared\Application\Data\ProductData;
+use App\Modules\Shared\Domain\ValueObjects\Id;
+use App\Modules\Shared\Domain\ValueObjects\Money;
+use App\Modules\Shared\Domain\ValueObjects\Period;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\DB;
 

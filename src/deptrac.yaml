@@ -17,10 +17,40 @@ deptrac:
         - type: classLike
           value: App\\Modules\\Shared\\Application\\.*
 
-    - name: SharedInfrastructure
+    - name: CatalogDomain
       collectors:
         - type: classLike
-          value: App\\Modules\\Shared\\Infrastructure\\.*
+          value: App\\Modules\\Catalog\\Domain\\.*
+
+    - name: CatalogInfrastructure
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Catalog\\Infrastructure\\.*
+
+    - name: ReportsDomain
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Reports\\Domain\\.*
+
+    - name: ReportsApplication
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Reports\\Application\\.*
+
+    - name: ReportsInfrastructure
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Reports\\Infrastructure\\.*
+
+    - name: CoreInfrastructure
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Core\\Infrastructure\\.*
+
+    - name: AuthInfrastructure
+      collectors:
+        - type: classLike
+          value: App\\Modules\\Auth\\Infrastructure\\.*
 
     - name: Framework
       collectors:
@@ -35,13 +65,59 @@ deptrac:
       collectors:
         - type: classLike
           value: ^Psr\\
+        - type: classLike
+          value: ^Barryvdh\\
+
+    - name: PHP
+      collectors:
+        - type: classLike
+          value: ^(DateInterval|DateMalformedStringException|DateTimeImmutable|DateTimeInterface|DateInvalidOperationException|Override|RuntimeException|Stringable|Throwable)$
 
   ruleset:
-    SharedDomain: []
+    SharedDomain:
+      - PHP
     SharedApplication:
       - SharedDomain
-    SharedInfrastructure:
+      - PHP
+
+    CatalogDomain:
+      - SharedDomain
+      - PHP
+    CatalogInfrastructure:
+      - CatalogDomain
       - SharedApplication
       - SharedDomain
       - Framework
       - Vendor
+      - PHP
+
+    ReportsDomain:
+      - SharedDomain
+      - PHP
+    ReportsApplication:
+      - ReportsDomain
+      - SharedApplication
+      - SharedDomain
+      - Vendor
+      - PHP
+    ReportsInfrastructure:
+      - ReportsApplication
+      - ReportsDomain
+      - SharedApplication
+      - SharedDomain
+      - CoreInfrastructure
+      - Framework
+      - Vendor
+      - PHP
+
+    CoreInfrastructure:
+      - CatalogInfrastructure
+      - ReportsInfrastructure
+      - Framework
+      - Vendor
+      - PHP
+
+    AuthInfrastructure:
+      - Framework
+      - Vendor
+      - PHP

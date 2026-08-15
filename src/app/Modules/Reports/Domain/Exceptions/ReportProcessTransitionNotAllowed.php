@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Reports\Domain\Exceptions;
 
 use App\Modules\Reports\Domain\Enums\ReportProcessStatus;
-use App\Modules\Shared\Exceptions\DomainException;
+use App\Modules\Shared\Domain\Exceptions\DomainException;
 
 final class ReportProcessTransitionNotAllowed extends DomainException
 {

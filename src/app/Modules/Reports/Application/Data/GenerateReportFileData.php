@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Reports\Application\Data;
 
-use App\Modules\Shared\Data\ProductData;
+use App\Modules\Shared\Application\Data\ProductData;
 use DateTimeImmutable;
 
 final readonly class GenerateReportFileData

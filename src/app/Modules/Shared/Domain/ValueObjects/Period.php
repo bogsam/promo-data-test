@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Shared\ValueObjects;
+namespace App\Modules\Shared\Domain\ValueObjects;
 
-use App\Modules\Shared\Exceptions\InvalidValueObjectData;
+use App\Modules\Shared\Domain\Exceptions\InvalidValueObjectData;
 use DateTimeImmutable;
 
 final readonly class Period

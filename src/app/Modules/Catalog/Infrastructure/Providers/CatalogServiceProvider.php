@@ -6,7 +6,7 @@ namespace App\Modules\Catalog\Infrastructure\Providers;
 
 use App\Modules\Catalog\Domain\Repositories\CatalogRepository;
 use App\Modules\Catalog\Infrastructure\Persistence\Repositories\EloquentCatalogRepository;
-use App\Modules\Shared\Contracts\CatalogReader;
+use App\Modules\Shared\Application\Contracts\CatalogReader;
 use Illuminate\Support\ServiceProvider;
 use Override;
 

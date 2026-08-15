@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Modules\Catalog\Domain\Entities;
 
-use App\Modules\Shared\ValueObjects\Id;
+use App\Modules\Shared\Domain\ValueObjects\Id;
 
 final class Manufacturer
 {

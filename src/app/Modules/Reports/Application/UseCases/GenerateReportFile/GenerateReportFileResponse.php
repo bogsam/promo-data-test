@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Modules\Reports\Application\UseCases\GenerateReportFile;
 
 use App\Modules\Reports\Domain\Entities\ReportProcess;
-use App\Modules\Shared\ValueObjects\Id;
+use App\Modules\Shared\Domain\ValueObjects\Id;
 use DateTimeImmutable;
 use RuntimeException;
 

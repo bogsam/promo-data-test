@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Modules\Shared\Exceptions;
+namespace App\Modules\Shared\Domain\Exceptions;
 
 final class InvalidValueObjectData extends DomainException
 {

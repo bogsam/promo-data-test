@@ -6,8 +6,8 @@ namespace App\Modules\Reports\Application\UseCases\CreateReport;
 
 use App\Modules\Reports\Domain\Entities\ReportProcess;
 use App\Modules\Reports\Domain\Repositories\ReportProcessRepository;
-use App\Modules\Shared\ValueObjects\Id;
-use App\Modules\Shared\ValueObjects\Period;
+use App\Modules\Shared\Domain\ValueObjects\Id;
+use App\Modules\Shared\Domain\ValueObjects\Period;
 use DateInterval;
 use DateInvalidOperationException;
 

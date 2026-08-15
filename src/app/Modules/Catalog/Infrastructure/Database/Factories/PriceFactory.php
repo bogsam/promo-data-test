@@ -6,7 +6,7 @@ namespace App\Modules\Catalog\Infrastructure\Database\Factories;
 
 use App\Modules\Catalog\Infrastructure\Persistence\Models\Price;
 use App\Modules\Catalog\Infrastructure\Persistence\Models\Product;
-use App\Modules\Shared\ValueObjects\Period;
+use App\Modules\Shared\Domain\ValueObjects\Period;
 use DateInterval;
 use Illuminate\Database\Eloquent\Factories\Factory;
 

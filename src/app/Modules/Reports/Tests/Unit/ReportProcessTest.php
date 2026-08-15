@@ -8,8 +8,8 @@ use App\Modules\Core\Tests\TestCase;
 use App\Modules\Reports\Domain\Entities\ReportProcess;
 use App\Modules\Reports\Domain\Enums\ReportProcessStatus;
 use App\Modules\Reports\Domain\Exceptions\ReportProcessTransitionNotAllowed;
-use App\Modules\Shared\ValueObjects\Id;
-use App\Modules\Shared\ValueObjects\Period;
+use App\Modules\Shared\Domain\ValueObjects\Id;
+use App\Modules\Shared\Domain\ValueObjects\Period;
 use DateTimeImmutable;
 
 final class ReportProcessTest extends TestCase
