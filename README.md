@@ -31,7 +31,12 @@ make install
 - выполняет `php artisan migrate:fresh --seed`;
 - поднимает приложение по адресу из `HTTP_PORT` в `.env`.
 
-Если окружение уже создано и нужно просто поднять контейнеры без пересоздания базы:
+## Формирование отчёта
+
+Очередь обрабатывается сервисом `queue-worker` из `docker-compose.yml`, поэтому после запуска контейнеров отдельный `queue:work` вручную запускать не нужно.
 
 ```bash
-make up
+docker compose exec app php artisan report:generate 10
+```
+
+Страница контроля процессов доступна по адресу `/report-processes`.

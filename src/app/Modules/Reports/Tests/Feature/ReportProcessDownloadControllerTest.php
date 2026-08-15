@@ -34,4 +34,24 @@ final class ReportProcessDownloadControllerTest extends TestCase
         $response->assertDownload('report.csv');
         $response->assertHeader('content-type', 'text/csv; charset=utf-8');
     }
+
+    public function test_it_returns_not_found_for_missing_report_process(): void
+    {
+        $response = $this->get('/report-processes/999999/download');
+
+        $response->assertNotFound();
+    }
+
+    public function test_it_returns_conflict_for_non_completed_report_process(): void
+    {
+        $this->seed(ProcessStatusSeeder::class);
+
+        $reportProcess = ReportProcess::factory()
+            ->processing()
+            ->create();
+
+        $response = $this->get("/report-processes/{$reportProcess->id}/download");
+
+        $response->assertConflict();
+    }
 }

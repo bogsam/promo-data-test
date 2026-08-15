@@ -205,7 +205,7 @@
                             </td>
                             <td>
                                 @if ($process->filePath !== null)
-                                    <a class="download-link" href="{{ route('report-processes.download', ['processId' => $process->processId]) }}">
+                                    <a class="download-link" href="{{ route('report-processes.download', ['reportProcess' => $process->processId]) }}">
                                         {{ $process->fileName }}
                                     </a>
                                 @else

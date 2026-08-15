@@ -18,6 +18,7 @@ final readonly class ReportProcessListItemData
         public ?DateTimeImmutable $finishedAt,
         public ?int               $executionTime,
         public ?string            $filePath,
+        public ?string            $fileName,
     ) {}
 
     public static function fromReportProcess(ReportProcess $reportProcess): self
@@ -31,6 +32,7 @@ final readonly class ReportProcessListItemData
             finishedAt:     $reportProcess->finishedAt(),
             executionTime:  $reportProcess->executionTimeInSeconds(),
             filePath:       $reportProcess->filePath(),
+            fileName:       $reportProcess->filePath(),
         );
     }
 }

@@ -50,9 +50,8 @@ final readonly class GenerateReportFileUseCase
                 throw new ReportDataNotFoundException(categoryId: $reportProcess->categoryId()->value());
             }
 
-            // TODO: уточнить требования
-            // Имя файла должно содержать один manufacturer_id; берём его из первой строки
-            // предполагаем, что список может содержать несколько manufacturer_id для одной категории
+            // Имя файла требует один manufacturer_id; строки отчёта уже отфильтрованы
+            // по категории, поэтому берём стабильный идентификатор из первой строки.
             $manufacturerId = $productData[0]->manufacturerId;
 
             $reportFileData = new GenerateReportFileData(

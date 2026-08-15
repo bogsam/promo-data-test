@@ -52,6 +52,35 @@ services:
       retries: 5
       start_period: 20s
 
+  queue-worker:
+    build:
+      context: .
+      dockerfile: docker/php/Dockerfile
+      target: dev
+      args:
+        HOST_UID: ${HOST_UID:-1000}
+        HOST_GID: ${HOST_GID:-1000}
+    restart: unless-stopped
+    environment:
+        APP_NAME: ${APP_NAME:-Laravel}
+        DB_DATABASE: ${DB_DATABASE}
+        DB_USERNAME: ${DB_USERNAME}
+        DB_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - ./src:/var/www/html:rw,delegated
+      - ./docker/php/conf.d/php.ini:/usr/local/etc/php/conf.d/zz-app.ini:ro
+      - ./docker/php/conf.d/xdebug.ini:/usr/local/etc/php/conf.d/zz-xdebug.ini:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    command: >
+      php artisan queue:work redis
+      --sleep=1
+      --tries=3
+      --timeout=90
+
   db:
     image: postgres:15-alpine
     restart: unless-stopped

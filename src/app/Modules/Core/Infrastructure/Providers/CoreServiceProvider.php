@@ -16,9 +16,6 @@ class CoreServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(
             paths: app_path(path: 'Modules/Core/Infrastructure/Database/Migrations')
         );
-        $this->loadRoutesFrom(
-            path: app_path(path: 'Modules/Core/Infrastructure/Routes/api.php')
-        );
 
         if (! class_exists('Database\\Seeders\\DatabaseSeeder', false)) {
             class_alias(DatabaseSeeder::class, 'Database\\Seeders\\DatabaseSeeder');

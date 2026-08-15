@@ -8,6 +8,7 @@ use App\Modules\Catalog\Domain\Repositories\CatalogRepository;
 use App\Modules\Shared\Contracts\CatalogReader;
 use App\Modules\Shared\Data\ProductData;
 use App\Modules\Shared\ValueObjects\Id;
+use App\Modules\Shared\ValueObjects\Money;
 use App\Modules\Shared\ValueObjects\Period;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\DB;
@@ -62,7 +63,7 @@ final class EloquentCatalogRepository implements CatalogRepository, CatalogReade
                 manufacturerId:   (int) $row->manufacturer_id,
                 manufacturerName: (string) $row->manufacturer_name,
                 productName:      (string) $row->product_name,
-                price:            number_format(num: (float) $row->price, decimals: 2, thousands_separator: ''),
+                price:            (string) new Money(amount: (int) $row->price),
                 priceDate:        new DateTimeImmutable(datetime: (string) $row->price_date),
             ))
             ->all();

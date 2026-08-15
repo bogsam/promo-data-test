@@ -5,10 +5,21 @@ declare(strict_types=1);
 namespace App\Modules\Reports\Tests\Feature;
 
 use App\Modules\Core\Tests\TestCase;
+use App\Modules\Reports\Infrastructure\Database\Seeders\ProcessStatusSeeder;
 use App\Modules\Reports\Infrastructure\Persistence\Models\ReportProcess;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 
 final class ReportProcessIndexControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->seed(ProcessStatusSeeder::class);
+    }
+
     public function test_it_renders_report_processes_from_the_route(): void
     {
         ReportProcess::factory(10)->create();

@@ -71,7 +71,6 @@ class ReportProcessSeeder extends Seeder
             ->value(column: 'id') ?? 1;
 
         ReportProcess::factory()->completed()->create([
-            'pid'               => (string) Str::ulid(),
             'category_id'       => $categoryId,
             'started_at'        => $startedAt,
             'finished_at'       => $startedAt->addSeconds(42),

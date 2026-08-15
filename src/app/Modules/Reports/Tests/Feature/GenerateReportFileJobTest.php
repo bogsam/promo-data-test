@@ -78,8 +78,127 @@ final class GenerateReportFileJobTest extends TestCase
         $content = Storage::disk('local')->get($this->reportProcess->file_path);
 
         self::assertStringContainsString('manufacturer_name,product_name,price,price_date', $content);
-        self::assertStringContainsString('"Acme Labs","Promo Widget",1000.00,"2026-08-10 10:00:00"', $content);
-        self::assertStringContainsString('"Acme Labs","Promo Widget",1500.00,"2026-08-12 10:00:00"', $content);
+        self::assertStringContainsString('"Acme Labs","Promo Widget",10.00,"2026-08-10 10:00:00"', $content);
+        self::assertStringContainsString('"Acme Labs","Promo Widget",15.00,"2026-08-12 10:00:00"', $content);
+    }
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws Throwable
+     * @throws BindingResolutionException
+     */
+    public function test_it_writes_minimum_and_maximum_price_rows_for_each_product(): void
+    {
+        $manufacturer = Manufacturer::factory()->create([
+            'manufacturer_name' => 'Acme Labs',
+        ]);
+
+        $this->createProductWithPrices(
+            manufacturer: $manufacturer,
+            productName:  'Promo Widget',
+            prices:       [
+                ['amount' => 1200, 'date' => '2026-08-09 10:00:00'],
+                ['amount' => 1000, 'date' => '2026-08-10 10:00:00'],
+                ['amount' => 1500, 'date' => '2026-08-12 10:00:00'],
+            ],
+        );
+        $this->createProductWithPrices(
+            manufacturer: $manufacturer,
+            productName:  'Promo Gadget',
+            prices:       [
+                ['amount' => 9900, 'date' => '2026-08-09 10:00:00'],
+                ['amount' => 8750, 'date' => '2026-08-11 10:00:00'],
+                ['amount' => 10325, 'date' => '2026-08-13 10:00:00'],
+            ],
+        );
+
+        $this->handleJob();
+
+        $content = Storage::disk('local')->get($this->reportProcess->refresh()->file_path);
+        $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
+
+        self::assertSame([
+            ['manufacturer_name', 'product_name', 'price', 'price_date'],
+            ['Acme Labs', 'Promo Widget', '10.00', '2026-08-10 10:00:00'],
+            ['Acme Labs', 'Promo Widget', '15.00', '2026-08-12 10:00:00'],
+            ['Acme Labs', 'Promo Gadget', '87.50', '2026-08-11 10:00:00'],
+            ['Acme Labs', 'Promo Gadget', '103.25', '2026-08-13 10:00:00'],
+        ], $rows);
+    }
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws Throwable
+     * @throws BindingResolutionException
+     */
+    public function test_it_ignores_prices_outside_report_period(): void
+    {
+        $manufacturer = Manufacturer::factory()->create([
+            'manufacturer_name' => 'Acme Labs',
+        ]);
+
+        $this->createProductWithPrices(
+            manufacturer: $manufacturer,
+            productName:  'Promo Widget',
+            prices:       [
+                ['amount' => 100, 'date' => '2026-08-07 10:00:00'],
+                ['amount' => 1000, 'date' => '2026-08-10 10:00:00'],
+                ['amount' => 1500, 'date' => '2026-08-12 10:00:00'],
+                ['amount' => 999999, 'date' => '2026-08-16 10:00:00'],
+            ],
+        );
+
+        $this->handleJob();
+
+        $content = Storage::disk('local')->get($this->reportProcess->refresh()->file_path);
+        $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
+
+        self::assertSame([
+            ['manufacturer_name', 'product_name', 'price', 'price_date'],
+            ['Acme Labs', 'Promo Widget', '10.00', '2026-08-10 10:00:00'],
+            ['Acme Labs', 'Promo Widget', '15.00', '2026-08-12 10:00:00'],
+        ], $rows);
+    }
+
+    /**
+     * @throws DateMalformedStringException
+     * @throws Throwable
+     * @throws BindingResolutionException
+     */
+    public function test_it_ignores_products_from_other_categories(): void
+    {
+        $manufacturer = Manufacturer::factory()->create([
+            'manufacturer_name' => 'Acme Labs',
+        ]);
+
+        $this->createProductWithPrices(
+            manufacturer: $manufacturer,
+            productName:  'Promo Widget',
+            prices:       [
+                ['amount' => 1000, 'date' => '2026-08-10 10:00:00'],
+                ['amount' => 1500, 'date' => '2026-08-12 10:00:00'],
+            ],
+        );
+        $this->createProductWithPrices(
+            manufacturer: $manufacturer,
+            productName:  'Other Category Widget',
+            prices:       [
+                ['amount' => 100, 'date' => '2026-08-10 10:00:00'],
+                ['amount' => 999999, 'date' => '2026-08-12 10:00:00'],
+            ],
+            categoryId:   99,
+        );
+
+        $this->handleJob();
+
+        $content = Storage::disk('local')->get($this->reportProcess->refresh()->file_path);
+        $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
+
+        self::assertSame([
+            ['manufacturer_name', 'product_name', 'price', 'price_date'],
+            ['Acme Labs', 'Promo Widget', '10.00', '2026-08-10 10:00:00'],
+            ['Acme Labs', 'Promo Widget', '15.00', '2026-08-12 10:00:00'],
+        ], $rows);
     }
 
     /**
@@ -129,6 +248,30 @@ final class GenerateReportFileJobTest extends TestCase
         ]);
 
         return $manufacturer;
+    }
+
+    /**
+     * @param  list<array{amount: int, date: string}>  $prices
+     */
+    private function createProductWithPrices(
+        Manufacturer $manufacturer,
+        string $productName,
+        array $prices,
+        ?int $categoryId = null,
+    ): void {
+        $product = Product::factory()->create([
+            'manufacturer_id' => $manufacturer->id,
+            'category_id' => $categoryId ?? $this->categoryId,
+            'product_name' => $productName,
+        ]);
+
+        foreach ($prices as $price) {
+            Price::factory()->create([
+                'product_id' => $product->id,
+                'price' => $price['amount'],
+                'price_date' => $price['date'],
+            ]);
+        }
     }
 
     /**

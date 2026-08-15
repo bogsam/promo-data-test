@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('prices', function (Blueprint $table): void {
             $table->id();
             $table->foreignId(column: 'product_id')->constrained(table: 'products');
-            $table->unsignedBigInteger(column: 'price');
+            $table->unsignedBigInteger(column: 'price')->comment('Price in minor units.');
             $table->dateTime(column: 'price_date')->index();
             $table->timestamps();
 
