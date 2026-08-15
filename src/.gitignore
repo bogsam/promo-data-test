@@ -8,6 +8,7 @@
 /.codex
 /.cursor/
 /.idea
+/.npm-cache
 /.nova
 /.phpunit.cache
 /.phpstan.cache

@@ -4,212 +4,67 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Контроль выполнения процессов</title>
-    <style>
-        :root {
-            color-scheme: light;
-            --bg: #f5f1e8;
-            --card: #fffdf8;
-            --text: #1f2937;
-            --muted: #6b7280;
-            --line: #d6d3ca;
-            --accent: #2563eb;
-            --danger-bg: #fff1f2;
-            --danger-line: #fecdd3;
-            --danger-text: #991b1b;
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-            color: var(--text);
-            background:
-                radial-gradient(circle at top left, rgba(37, 99, 235, 0.08), transparent 32%),
-                linear-gradient(180deg, #faf7f0 0%, var(--bg) 100%);
-        }
-
-        main {
-            max-width: 1180px;
-            margin: 0 auto;
-            padding: 48px 24px 72px;
-        }
-
-        .page-head {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            align-items: end;
-            justify-content: space-between;
-            margin-bottom: 24px;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: clamp(2rem, 4vw, 3rem);
-            letter-spacing: -0.04em;
-        }
-
-        .subtitle {
-            margin: 8px 0 0;
-            max-width: 720px;
-            color: var(--muted);
-            line-height: 1.5;
-        }
-
-        .panel {
-            background: rgba(255, 253, 248, 0.88);
-            border: 1px solid rgba(214, 211, 202, 0.8);
-            border-radius: 24px;
-            overflow: hidden;
-            box-shadow: 0 18px 50px rgba(15, 23, 42, 0.06);
-            backdrop-filter: blur(10px);
-        }
-
-        .panel__empty {
-            padding: 32px;
-            color: var(--muted);
-        }
-
-        .table-wrap {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        thead th {
-            padding: 16px 18px;
-            background: rgba(37, 99, 235, 0.04);
-            text-align: left;
-            font-size: 0.9rem;
-            color: var(--muted);
-            border-bottom: 1px solid var(--line);
-            white-space: nowrap;
-        }
-
-        tbody td {
-            padding: 16px 18px;
-            border-bottom: 1px solid rgba(214, 211, 202, 0.7);
-            vertical-align: top;
-        }
-
-        tbody tr:last-child td {
-            border-bottom: 0;
-        }
-
-        tbody tr.is-failed {
-            background: var(--danger-bg);
-            color: var(--danger-text);
-        }
-
-        .meta {
-            display: block;
-            margin-top: 4px;
-            font-size: 0.875rem;
-            color: var(--muted);
-        }
-
-        .status-pill {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            border-radius: 999px;
-            padding: 6px 12px;
-            font-weight: 600;
-            background: rgba(37, 99, 235, 0.08);
-            color: var(--accent);
-        }
-
-        .status-pill.is-failed {
-            background: rgba(244, 63, 94, 0.12);
-            color: var(--danger-text);
-        }
-
-        .download-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        .download-link:hover {
-            text-decoration: underline;
-        }
-
-        .download-missing {
-            color: var(--muted);
-        }
-
-        @media (max-width: 768px) {
-            main {
-                padding: 24px 14px 48px;
-            }
-
-            thead th,
-            tbody td {
-                padding: 14px 12px;
-            }
-        }
-    </style>
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body>
-<main>
-    <div class="page-head">
+<body class="min-h-screen bg-stone-100 bg-[radial-gradient(circle_at_top_left,rgba(37,99,235,0.08),transparent_32%),linear-gradient(180deg,#faf7f0_0%,#f5f1e8_100%)] text-center text-slate-800 antialiased">
+<main class="mx-auto max-w-[1180px] px-3.5 py-6 sm:px-6 sm:py-12 lg:pb-18">
+    <div class="mb-6 flex flex-wrap items-end justify-center gap-3">
         <div>
-            <h1>Контроль выполнения процессов</h1>
-            <p class="subtitle">
+            <h1 class="text-3xl font-bold text-slate-900 sm:text-5xl">Контроль выполнения процессов</h1>
+            <p class="mx-auto mt-2 max-w-3xl leading-6 text-slate-500">
                 Статический список процессов формирования отчётов. Ошибки подсвечиваются, а успешные файлы доступны для скачивания.
             </p>
         </div>
     </div>
 
-    <section class="panel">
+    <section class="overflow-hidden rounded-3xl border border-stone-300/80 bg-stone-50/90 shadow-[0_18px_50px_rgba(15,23,42,0.06)] backdrop-blur">
         @if ($processes === [])
-            <div class="panel__empty">Процессы отчётов пока отсутствуют.</div>
+            <div class="p-8 text-slate-500">Процессы отчётов пока отсутствуют.</div>
         @else
-            <div class="table-wrap">
-                <table>
+            <div class="overflow-x-auto">
+                <table class="w-full border-collapse">
                     <thead>
                     <tr>
-                        <th>Дата процесса</th>
-                        <th>Время выполнения</th>
-                        <th>Идентификатор процесса</th>
-                        <th>Статус процесса</th>
-                        <th>Файл</th>
+                        <th class="whitespace-nowrap border-b border-stone-300 bg-blue-600/[0.04] px-3 py-3.5 text-center text-sm font-semibold text-slate-500 sm:px-[18px] sm:py-4">Дата процесса</th>
+                        <th class="whitespace-nowrap border-b border-stone-300 bg-blue-600/[0.04] px-3 py-3.5 text-center text-sm font-semibold text-slate-500 sm:px-[18px] sm:py-4">Время выполнения</th>
+                        <th class="whitespace-nowrap border-b border-stone-300 bg-blue-600/[0.04] px-3 py-3.5 text-center text-sm font-semibold text-slate-500 sm:px-[18px] sm:py-4">Идентификатор процесса</th>
+                        <th class="whitespace-nowrap border-b border-stone-300 bg-blue-600/[0.04] px-3 py-3.5 text-center text-sm font-semibold text-slate-500 sm:px-[18px] sm:py-4">Статус процесса</th>
+                        <th class="whitespace-nowrap border-b border-stone-300 bg-blue-600/[0.04] px-3 py-3.5 text-center text-sm font-semibold text-slate-500 sm:px-[18px] sm:py-4">Файл</th>
                     </tr>
                     </thead>
                     <tbody>
                     @foreach ($processes as $process)
-                        <tr @class(['is-failed' => $process->status === 'Ошибка'])>
-                            <td>
+                        <tr @class(['bg-rose-50 text-red-800' => $process->status === 'Ошибка'])>
+                            <td class="border-b border-stone-300/70 px-3 py-3.5 text-center align-middle last:border-b-0 sm:px-[18px] sm:py-4">
                                 {{ $process->startedAt->format('Y-m-d H:i:s') }}
                                 @if ($process->finishedAt !== null)
-                                    <span class="meta">Завершён: {{ $process->finishedAt->format('Y-m-d H:i:s') }}</span>
+                                    <span class="mt-1 block text-sm text-slate-500">Завершён: {{ $process->finishedAt->format('Y-m-d H:i:s') }}</span>
                                 @endif
                             </td>
-                            <td>
+                            <td class="border-b border-stone-300/70 px-3 py-3.5 text-center align-middle last:border-b-0 sm:px-[18px] sm:py-4">
                                 {{ $process->executionTime !== null ? $process->executionTime.' сек.' : 'В работе' }}
                             </td>
-                            <td>
+                            <td class="border-b border-stone-300/70 px-3 py-3.5 text-center align-middle last:border-b-0 sm:px-[18px] sm:py-4">
                                 {{ $process->pid }}
-                                <span class="meta">Категория: {{ $process->categoryId }}</span>
+                                <span class="mt-1 block text-sm text-slate-500">Категория: {{ $process->categoryId }}</span>
                             </td>
-                            <td>
-                                <span @class(['status-pill', 'is-failed' => $process->status === 'Ошибка'])>
+                            <td class="border-b border-stone-300/70 px-3 py-3.5 text-center align-middle last:border-b-0 sm:px-[18px] sm:py-4">
+                                <span @class([
+                                    'inline-flex items-center gap-2 rounded-full px-3 py-1.5 font-semibold',
+                                    'bg-rose-500/[0.12] text-red-800' => $process->status === 'Ошибка',
+                                    'bg-emerald-500/[0.14] text-emerald-700' => $process->status === 'Завершён',
+                                    'bg-blue-600/[0.08] text-blue-600' => ! in_array($process->status, ['Ошибка', 'Завершён'], true),
+                                ])>
                                     {{ $process->status }}
                                 </span>
                             </td>
-                            <td>
+                            <td class="border-b border-stone-300/70 px-3 py-3.5 text-center align-middle last:border-b-0 sm:px-[18px] sm:py-4">
                                 @if ($process->filePath !== null)
-                                    <a class="download-link" href="{{ route('report-processes.download', ['reportProcess' => $process->processId]) }}">
+                                    <a class="font-semibold text-blue-600 no-underline hover:underline" href="{{ route('report-processes.download', ['reportProcess' => $process->processId]) }}">
                                         {{ $process->fileName }}
                                     </a>
                                 @else
-                                    <span class="download-missing">-</span>
+                                    <span class="text-slate-500">-</span>
                                 @endif
                             </td>
                         </tr>

@@ -32,7 +32,7 @@ final readonly class ReportProcessListItemData
             finishedAt:     $reportProcess->finishedAt(),
             executionTime:  $reportProcess->executionTimeInSeconds(),
             filePath:       $reportProcess->filePath(),
-            fileName:       $reportProcess->filePath(),
+            fileName:       $reportProcess->filePath() !== null ? basename(path: $reportProcess->filePath()) : null,
         );
     }
 }
