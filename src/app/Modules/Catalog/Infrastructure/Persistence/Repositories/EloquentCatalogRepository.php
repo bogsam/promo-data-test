@@ -17,39 +17,39 @@ final class EloquentCatalogRepository implements CatalogReader, CatalogRepositor
 {
     public function findProductDataByCategoryAndPeriod(Id $categoryId, Period $period): array
     {
-        $baseQuery = DB::table('products as p')
-            ->join(table: 'manufacturers as m', first: 'm.id', operator: '=', second: 'p.manufacturer_id')
-            ->join(table: 'prices as pr', first: 'pr.product_id', operator: '=', second: 'p.id')
+        $baseQuery = DB::table('product as p')
+            ->join(table: 'manufacturer as m', first: 'm.manufacturer_id', operator: '=', second: 'p.manufacturer_id')
+            ->join(table: 'price as pr', first: 'pr.product_id', operator: '=', second: 'p.product_id')
             ->where(column: 'p.category_id', operator: '=', value: $categoryId->value())
             ->whereBetween(column: 'pr.price_date', values: [$period->from(), $period->to()]);
 
         $minRows = (clone $baseQuery)
             ->selectRaw(expression: '
-                p.id as product_id,
+                p.product_id,
                 p.product_name,
-                m.id as manufacturer_id,
+                m.manufacturer_id,
                 m.manufacturer_name,
                 pr.price,
                 pr.price_date,
                 1 as sort_order,
                 row_number() over (
-                    partition by p.id
-                    order by pr.price asc, pr.price_date asc, pr.id asc
+                    partition by p.product_id
+                    order by pr.price asc, pr.price_date asc, pr.price_id asc
                 ) as row_number
             ');
 
         $maxRows = (clone $baseQuery)
             ->selectRaw(expression: '
-                p.id as product_id,
+                p.product_id,
                 p.product_name,
-                m.id as manufacturer_id,
+                m.manufacturer_id,
                 m.manufacturer_name,
                 pr.price,
                 pr.price_date,
                 2 as sort_order,
                 row_number() over (
-                    partition by p.id
-                    order by pr.price desc, pr.price_date desc, pr.id desc
+                    partition by p.product_id
+                    order by pr.price desc, pr.price_date desc, pr.price_id desc
                 ) as row_number
             ');
 

@@ -47,11 +47,11 @@ final class GenerateReportFileJobTest extends TestCase
         $this->periodTo = CarbonImmutable::parse('2026-08-15 10:00:00');
         $this->startedAt = CarbonImmutable::parse('2026-08-15 10:00:00');
         $this->reportProcess = ReportProcess::factory()->create([
-            'pid'         => 12345,
-            'category_id' => $this->categoryId,
-            'period_from' => $this->periodFrom,
-            'period_to'   => $this->periodTo,
-            'started_at'  => $this->startedAt,
+            'rp_pid'             => 12345,
+            'rp_category_id'     => $this->categoryId,
+            'rp_period_from'     => $this->periodFrom,
+            'rp_period_to'       => $this->periodTo,
+            'rp_start_datetime'  => $this->startedAt,
         ]);
     }
 
@@ -68,14 +68,14 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->reportProcess->refresh()->load('status');
 
-        self::assertSame(ReportProcessStatus::Completed->code(), $this->reportProcess->status->code);
+        self::assertSame(ReportProcessStatus::Completed->label(), $this->reportProcess->status->ps_name);
         self::assertSame(
-            sprintf('reports/report_%d_42_2026-08-15_10-00-00.csv', $manufacturer->id),
-            $this->reportProcess->file_path,
+            sprintf('reports/report_%d_42_2026-08-15_10-00-00.csv', $manufacturer->manufacturer_id),
+            $this->reportProcess->rp_file_save_path,
         );
-        Storage::disk('local')->assertExists($this->reportProcess->file_path);
+        Storage::disk('local')->assertExists($this->reportProcess->rp_file_save_path);
 
-        $content = Storage::disk('local')->get($this->reportProcess->file_path);
+        $content = Storage::disk('local')->get($this->reportProcess->rp_file_save_path);
 
         self::assertStringContainsString('manufacturer_name,product_name,price,price_date', $content);
         self::assertStringContainsString('"Acme Labs","Promo Widget",10.00,"2026-08-10 10:00:00"', $content);
@@ -114,7 +114,7 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->handleJob();
 
-        $content = Storage::disk('local')->get($this->reportProcess->refresh()->file_path);
+        $content = Storage::disk('local')->get($this->reportProcess->refresh()->rp_file_save_path);
         $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
 
         self::assertSame([
@@ -150,7 +150,7 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->handleJob();
 
-        $content = Storage::disk('local')->get($this->reportProcess->refresh()->file_path);
+        $content = Storage::disk('local')->get($this->reportProcess->refresh()->rp_file_save_path);
         $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
 
         self::assertSame([
@@ -191,7 +191,7 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->handleJob();
 
-        $content = Storage::disk('local')->get($this->reportProcess->refresh()->file_path);
+        $content = Storage::disk('local')->get($this->reportProcess->refresh()->rp_file_save_path);
         $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
 
         self::assertSame([
@@ -217,9 +217,9 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->reportProcess->refresh()->load('status');
 
-        self::assertSame(ReportProcessStatus::Failed->code(), $this->reportProcess->status->code);
-        self::assertSame('No reportable data found for category 42.', $this->reportProcess->error_message);
-        self::assertNull($this->reportProcess->file_path);
+        self::assertSame(ReportProcessStatus::Failed->label(), $this->reportProcess->status->ps_name);
+        self::assertSame('No reportable data found for category 42.', $this->reportProcess->rp_error_message);
+        self::assertNull($this->reportProcess->rp_file_save_path);
         self::assertSame([], Storage::disk('local')->allFiles('reports'));
     }
 
@@ -230,19 +230,19 @@ final class GenerateReportFileJobTest extends TestCase
         ]);
 
         $product = Product::factory()->create([
-            'manufacturer_id' => $manufacturer->id,
+            'manufacturer_id' => $manufacturer->manufacturer_id,
             'category_id'     => $this->categoryId,
             'product_name'    => 'Promo Widget',
         ]);
 
         Price::factory()->create([
-            'product_id' => $product->id,
+            'product_id' => $product->product_id,
             'price'      => 1000,
             'price_date' => '2026-08-10 10:00:00',
         ]);
 
         Price::factory()->create([
-            'product_id' => $product->id,
+            'product_id' => $product->product_id,
             'price'      => 1500,
             'price_date' => '2026-08-12 10:00:00',
         ]);
@@ -260,14 +260,14 @@ final class GenerateReportFileJobTest extends TestCase
         ?int $categoryId = null,
     ): void {
         $product = Product::factory()->create([
-            'manufacturer_id' => $manufacturer->id,
+            'manufacturer_id' => $manufacturer->manufacturer_id,
             'category_id'     => $categoryId ?? $this->categoryId,
             'product_name'    => $productName,
         ]);
 
         foreach ($prices as $price) {
             Price::factory()->create([
-                'product_id' => $product->id,
+                'product_id' => $product->product_id,
                 'price'      => $price['amount'],
                 'price_date' => $price['date'],
             ]);
@@ -281,7 +281,7 @@ final class GenerateReportFileJobTest extends TestCase
      */
     private function handleJob(): void
     {
-        new GenerateReportFileJob(processId: $this->reportProcess->id)
+        new GenerateReportFileJob(processId: $this->reportProcess->rp_id)
             ->handle($this->app->make(GenerateReportFileUseCase::class));
     }
 }

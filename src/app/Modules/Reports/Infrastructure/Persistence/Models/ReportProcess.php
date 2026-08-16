@@ -15,18 +15,17 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
- * @property int $pid
- * @property int $category_id
- * @property Carbon $period_from
- * @property Carbon $period_to
- * @property int $status_id
- * @property Carbon $started_at
- * @property Carbon|null $finished_at
- * @property int|null $execution_time_ms
- * @property string|null $file_name
- * @property string|null $file_path
- * @property string|null $error_message
+ * @property int $rp_id
+ * @property int $rp_pid
+ * @property int $rp_category_id
+ * @property Carbon $rp_period_from
+ * @property Carbon $rp_period_to
+ * @property int $ps_id
+ * @property Carbon $rp_start_datetime
+ * @property Carbon|null $rp_finish_datetime
+ * @property int|null $rp_exec_time
+ * @property string|null $rp_file_save_path
+ * @property string|null $rp_error_message
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read ProcessStatus $status
@@ -35,19 +34,18 @@ use Illuminate\Support\Carbon;
  * @method static Builder<static>|ReportProcess newModelQuery()
  * @method static Builder<static>|ReportProcess newQuery()
  * @method static Builder<static>|ReportProcess query()
- * @method static Builder<static>|ReportProcess whereCategoryId($value)
  * @method static Builder<static>|ReportProcess whereCreatedAt($value)
- * @method static Builder<static>|ReportProcess whereErrorMessage($value)
- * @method static Builder<static>|ReportProcess whereExecutionTimeMs($value)
- * @method static Builder<static>|ReportProcess whereFileName($value)
- * @method static Builder<static>|ReportProcess whereFilePath($value)
- * @method static Builder<static>|ReportProcess whereFinishedAt($value)
- * @method static Builder<static>|ReportProcess whereId($value)
- * @method static Builder<static>|ReportProcess wherePeriodFrom($value)
- * @method static Builder<static>|ReportProcess wherePeriodTo($value)
- * @method static Builder<static>|ReportProcess wherePid($value)
- * @method static Builder<static>|ReportProcess whereStartedAt($value)
- * @method static Builder<static>|ReportProcess whereStatusId($value)
+ * @method static Builder<static>|ReportProcess wherePsId($value)
+ * @method static Builder<static>|ReportProcess whereRpCategoryId($value)
+ * @method static Builder<static>|ReportProcess whereRpErrorMessage($value)
+ * @method static Builder<static>|ReportProcess whereRpExecTime($value)
+ * @method static Builder<static>|ReportProcess whereRpFileSavePath($value)
+ * @method static Builder<static>|ReportProcess whereRpFinishDatetime($value)
+ * @method static Builder<static>|ReportProcess whereRpId($value)
+ * @method static Builder<static>|ReportProcess whereRpPeriodFrom($value)
+ * @method static Builder<static>|ReportProcess whereRpPeriodTo($value)
+ * @method static Builder<static>|ReportProcess whereRpPid($value)
+ * @method static Builder<static>|ReportProcess whereRpStartDatetime($value)
  * @method static Builder<static>|ReportProcess whereUpdatedAt($value)
  *
  * @mixin Eloquent
@@ -58,30 +56,31 @@ class ReportProcess extends Model
     /** @use HasFactory<ReportFactory> */
     use HasFactory;
 
-    protected $table = 'report_processes';
+    protected $table = 'report_process';
+
+    protected $primaryKey = 'rp_id';
 
     protected $fillable = [
-        'pid',
-        'category_id',
-        'period_from',
-        'period_to',
-        'status_id',
-        'started_at',
-        'finished_at',
-        'execution_time_ms',
-        'file_name',
-        'file_path',
-        'error_message',
+        'rp_pid',
+        'rp_category_id',
+        'rp_period_from',
+        'rp_period_to',
+        'ps_id',
+        'rp_start_datetime',
+        'rp_finish_datetime',
+        'rp_exec_time',
+        'rp_file_save_path',
+        'rp_error_message',
     ];
 
     protected $casts = [
-        'category_id'       => 'integer',
-        'status_id'         => 'integer',
-        'period_from'       => 'datetime',
-        'period_to'         => 'datetime',
-        'started_at'        => 'datetime',
-        'finished_at'       => 'datetime',
-        'execution_time_ms' => 'integer',
+        'rp_category_id'           => 'integer',
+        'ps_id'                    => 'integer',
+        'rp_period_from'           => 'datetime',
+        'rp_period_to'             => 'datetime',
+        'rp_start_datetime'        => 'datetime',
+        'rp_finish_datetime'       => 'datetime',
+        'rp_exec_time'             => 'integer',
     ];
 
     /**
@@ -89,7 +88,7 @@ class ReportProcess extends Model
      */
     public function status(): BelongsTo
     {
-        return $this->belongsTo(related: ProcessStatus::class, foreignKey: 'status_id');
+        return $this->belongsTo(related: ProcessStatus::class, foreignKey: 'ps_id', ownerKey: 'ps_id');
     }
 
     public function resolveRouteBindingQuery($query, $value, $field = null): EloquentBuilder

@@ -14,12 +14,11 @@ class ProcessStatusSeeder extends Seeder
     {
         $rows = array_map(
             callback: static fn (ReportProcessStatus $status): array => [
-                'code' => $status->code(),
-                'name' => $status->label(),
+                'ps_name' => $status->label(),
             ],
             array: ReportProcessStatus::cases(),
         );
 
-        ProcessStatus::query()->upsert($rows, ['code'], ['name']);
+        ProcessStatus::query()->upsert($rows, ['ps_name'], ['ps_name']);
     }
 }

@@ -15,11 +15,11 @@ final class ReportProcessDownloadController extends Controller
 {
     public function __invoke(ReportProcess $reportProcess): StreamedResponse
     {
-        if ($reportProcess->status->code !== ReportProcessStatus::Completed->code()) {
+        if ($reportProcess->status->ps_name !== ReportProcessStatus::Completed->label()) {
             abort(code: Response::HTTP_CONFLICT, message: 'Report file is available only for completed processes.');
         }
 
-        $filePath = $reportProcess->file_path;
+        $filePath = $reportProcess->rp_file_save_path;
 
         if ($filePath === null || ! Storage::disk('local')->exists($filePath)) {
             abort(code: Response::HTTP_NOT_FOUND, message: 'Report file not found.');

@@ -24,11 +24,10 @@ final class ReportProcessDownloadControllerTest extends TestCase
         $reportProcess = ReportProcess::factory()
             ->completed()
             ->create([
-                'file_name' => 'report.csv',
-                'file_path' => 'reports/report.csv',
+                'rp_file_save_path' => 'reports/report.csv',
             ]);
 
-        $response = $this->get("/report-processes/{$reportProcess->id}/download");
+        $response = $this->get("/report-processes/{$reportProcess->rp_id}/download");
 
         $response->assertOk();
         $response->assertDownload('report.csv');
@@ -50,7 +49,7 @@ final class ReportProcessDownloadControllerTest extends TestCase
             ->processing()
             ->create();
 
-        $response = $this->get("/report-processes/{$reportProcess->id}/download");
+        $response = $this->get("/report-processes/{$reportProcess->rp_id}/download");
 
         $response->assertConflict();
     }

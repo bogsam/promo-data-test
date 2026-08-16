@@ -28,11 +28,11 @@ final class GenerateReportCommandTest extends TestCase
 
         $reportProcess = ReportProcess::query()->with('status')->sole();
 
-        self::assertSame(42, $reportProcess->category_id);
-        self::assertSame(ReportProcessStatus::Started->code(), $reportProcess->status->code);
+        self::assertSame(42, $reportProcess->rp_category_id);
+        self::assertSame(ReportProcessStatus::Started->label(), $reportProcess->status->ps_name);
         Bus::assertDispatched(
             GenerateReportFileJob::class,
-            static fn (GenerateReportFileJob $job): bool => $job->processId === $reportProcess->id,
+            static fn (GenerateReportFileJob $job): bool => $job->processId === $reportProcess->rp_id,
         );
     }
 
@@ -45,7 +45,7 @@ final class GenerateReportCommandTest extends TestCase
             ->expectsOutput('The category_id must be a positive integer.')
             ->assertExitCode(Command::FAILURE);
 
-        self::assertDatabaseCount('report_processes', 0);
+        self::assertDatabaseCount('report_process', 0);
         Bus::assertNotDispatched(GenerateReportFileJob::class);
     }
 }

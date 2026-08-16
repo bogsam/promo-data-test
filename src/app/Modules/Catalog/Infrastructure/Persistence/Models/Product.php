@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
+ * @property int $product_id
  * @property string $product_name
  * @property int $category_id
  * @property int $manufacturer_id
@@ -45,7 +45,9 @@ class Product extends Model
     /** @use HasFactory<ProductFactory> */
     use HasFactory;
 
-    protected $table = 'products';
+    protected $table = 'product';
+
+    protected $primaryKey = 'product_id';
 
     protected $fillable = [
         'product_name',
@@ -63,7 +65,7 @@ class Product extends Model
      */
     public function manufacturer(): BelongsTo
     {
-        return $this->belongsTo(related: Manufacturer::class, foreignKey: 'manufacturer_id');
+        return $this->belongsTo(related: Manufacturer::class, foreignKey: 'manufacturer_id', ownerKey: 'manufacturer_id');
     }
 
     /**
@@ -71,6 +73,6 @@ class Product extends Model
      */
     public function prices(): HasMany
     {
-        return $this->hasMany(related: Price::class, foreignKey: 'product_id');
+        return $this->hasMany(related: Price::class, foreignKey: 'product_id', localKey: 'product_id');
     }
 }

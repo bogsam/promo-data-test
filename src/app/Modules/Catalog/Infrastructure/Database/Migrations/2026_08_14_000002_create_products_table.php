@@ -10,17 +10,18 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('products', function (Blueprint $table): void {
-            $table->id();
+        Schema::create('product', function (Blueprint $table): void {
+            $table->id(column: 'product_id');
             $table->string(column: 'product_name');
             $table->unsignedBigInteger(column: 'category_id')->index();
-            $table->foreignId(column: 'manufacturer_id')->constrained(table: 'manufacturers');
+            $table->foreignId(column: 'manufacturer_id')
+                ->constrained(table: 'manufacturer', column: 'manufacturer_id');
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('product');
     }
 };

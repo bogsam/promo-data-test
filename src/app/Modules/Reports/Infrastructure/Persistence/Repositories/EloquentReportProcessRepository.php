@@ -61,7 +61,7 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
     {
         return ReportProcessModel::query()
             ->with(relations: 'status')
-            ->latest(column: 'started_at')
+            ->latest(column: 'rp_start_datetime')
             ->get()
             ->map(callback: fn (ReportProcessModel $model): ReportProcessEntity => $this->toDomain(model: $model))
             ->all();
@@ -69,35 +69,33 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
 
     /**
      * @return array{
-     *     pid: int,
-     *     category_id: int,
-     *     period_from: DateTimeImmutable,
-     *     period_to: DateTimeImmutable,
-     *     status_id: int,
-     *     started_at: DateTimeImmutable,
-     *     finished_at: DateTimeImmutable|null,
-     *     execution_time_ms: int|null,
-     *     file_name: string|null,
-     *     file_path: string|null,
-     *     error_message: string|null
+     *     rp_pid: int,
+     *     rp_category_id: int,
+     *     rp_period_from: DateTimeImmutable,
+     *     rp_period_to: DateTimeImmutable,
+     *     ps_id: int,
+     *     rp_start_datetime: DateTimeImmutable,
+     *     rp_finish_datetime: DateTimeImmutable|null,
+     *     rp_exec_time: int|null,
+     *     rp_file_save_path: string|null,
+     *     rp_error_message: string|null
      * }
      */
     private function toAttributes(ReportProcessEntity $reportProcess, int $statusId): array
     {
         return [
-            'pid'               => $reportProcess->pid(),
-            'category_id'       => $reportProcess->categoryId()->value(),
-            'period_from'       => $reportProcess->period()->from(),
-            'period_to'         => $reportProcess->period()->to(),
-            'status_id'         => $statusId,
-            'started_at'        => $reportProcess->startedAt(),
-            'finished_at'       => $reportProcess->finishedAt(),
-            'execution_time_ms' => $reportProcess->executionTimeInSeconds() !== null
+            'rp_pid'               => $reportProcess->pid(),
+            'rp_category_id'       => $reportProcess->categoryId()->value(),
+            'rp_period_from'       => $reportProcess->period()->from(),
+            'rp_period_to'         => $reportProcess->period()->to(),
+            'ps_id'                => $statusId,
+            'rp_start_datetime'    => $reportProcess->startedAt(),
+            'rp_finish_datetime'   => $reportProcess->finishedAt(),
+            'rp_exec_time'         => $reportProcess->executionTimeInSeconds() !== null
                 ? $reportProcess->executionTimeInSeconds() * 1000
                 : null,
-            'file_name'         => $reportProcess->filePath() !== null ? basename(path: $reportProcess->filePath()) : null,
-            'file_path'         => $reportProcess->filePath(),
-            'error_message'     => $reportProcess->errorMessage(),
+            'rp_file_save_path'   => $reportProcess->filePath(),
+            'rp_error_message'    => $reportProcess->errorMessage(),
         ];
     }
 
@@ -107,33 +105,44 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
     private function toDomain(ReportProcessModel $model): ReportProcessEntity
     {
         return ReportProcessEntity::restore(
-            id: new Id($model->id),
-            pid: $model->pid,
-            categoryId: new Id($model->category_id),
+            id: new Id($model->rp_id),
+            pid: $model->rp_pid,
+            categoryId: new Id($model->rp_category_id),
             period: Period::between(
-                from: $this->toDateTimeImmutable(value: $model->period_from),
-                to: $this->toDateTimeImmutable(value: $model->period_to),
+                from: $this->toDateTimeImmutable(value: $model->rp_period_from),
+                to: $this->toDateTimeImmutable(value: $model->rp_period_to),
             ),
-            status: ReportProcessStatus::from(value: $model->status->code),
-            startedAt: $this->toDateTimeImmutable(value: $model->started_at),
-            finishedAt: $model->finished_at !== null ? $this->toDateTimeImmutable(value: $model->finished_at) : null,
-            executionTimeInSeconds: $model->execution_time_ms !== null
-                ? intdiv(num1: (int) $model->execution_time_ms, num2: 1000)
+            status: $this->statusFromLabel(label: $model->status->ps_name),
+            startedAt: $this->toDateTimeImmutable(value: $model->rp_start_datetime),
+            finishedAt: $model->rp_finish_datetime !== null ? $this->toDateTimeImmutable(value: $model->rp_finish_datetime) : null,
+            executionTimeInSeconds: $model->rp_exec_time !== null
+                ? intdiv(num1: (int) $model->rp_exec_time, num2: 1000)
                 : null,
-            filePath: $model->file_path,
-            errorMessage: $model->error_message,
+            filePath: $model->rp_file_save_path,
+            errorMessage: $model->rp_error_message,
         );
     }
 
     private function resolveStatusId(ReportProcessStatus $status): int
     {
-        $model = ProcessStatus::query()->where('code', $status->code())->first();
+        $model = ProcessStatus::query()->where('ps_name', $status->label())->first();
 
         if ($model === null) {
-            throw new ModelNotFoundException(message: sprintf('Process status "%s" not found.', $status->code()));
+            throw new ModelNotFoundException(message: sprintf('Process status "%s" not found.', $status->label()));
         }
 
-        return $model->id;
+        return $model->ps_id;
+    }
+
+    private function statusFromLabel(string $label): ReportProcessStatus
+    {
+        foreach (ReportProcessStatus::cases() as $status) {
+            if ($status->label() === $label) {
+                return $status;
+            }
+        }
+
+        throw new ModelNotFoundException(message: sprintf('Process status "%s" not found.', $label));
     }
 
     /**

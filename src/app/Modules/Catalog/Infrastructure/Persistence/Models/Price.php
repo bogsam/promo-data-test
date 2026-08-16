@@ -14,7 +14,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
 
 /**
- * @property int $id
+ * @property int $price_id
  * @property int $product_id
  * @property int $price
  * @property Carbon $price_date
@@ -41,7 +41,9 @@ class Price extends Model
     /** @use HasFactory<PriceFactory> */
     use HasFactory;
 
-    protected $table = 'prices';
+    protected $table = 'price';
+
+    protected $primaryKey = 'price_id';
 
     protected $fillable = [
         'product_id',
@@ -59,6 +61,6 @@ class Price extends Model
      */
     public function product(): BelongsTo
     {
-        return $this->belongsTo(related: Product::class, foreignKey: 'product_id');
+        return $this->belongsTo(related: Product::class, foreignKey: 'product_id', ownerKey: 'product_id');
     }
 }

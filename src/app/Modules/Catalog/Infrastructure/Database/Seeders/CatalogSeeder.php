@@ -16,13 +16,13 @@ class CatalogSeeder extends Seeder
     {
         $categoryProducts = [
             10 => [
-                ['name' => 'Alpha Coffee Beans', 'manufacturer_id' => 0, 'prices' => [12500, 11900, 12100, 10750, 13200, 12000, 11450]],
-                ['name' => 'Beta Tea Pack',      'manufacturer_id' => 0, 'prices' => [81000, 79000, 82500, 76000, 84000, 78000, 80500]],
-                ['name' => 'Gamma Cocoa Mix',    'manufacturer_id' => 0, 'prices' => [15000, 14075, 15010, 14000, 15055, 14090, 15025]],
+                ['name' => 'Alpha Coffee Beans', 'manufacturer_id' => 0, 'price' => [12500, 11900, 12100, 10750, 13200, 12000, 11450]],
+                ['name' => 'Beta Tea Pack',      'manufacturer_id' => 0, 'price' => [81000, 79000, 82500, 76000, 84000, 78000, 80500]],
+                ['name' => 'Gamma Cocoa Mix',    'manufacturer_id' => 0, 'price' => [15000, 14075, 15010, 14000, 15055, 14090, 15025]],
             ],
             20 => [
-                ['name' => 'Delta Biscuit', 'manufacturer_id' => 1, 'prices' => [50020, 50010, 50040, 40095, 50055, 50025, 50300]],
-                ['name' => 'Epsilon Jam',   'manufacturer_id' => 1, 'prices' => [90080, 90065, 90090, 90040, 100010, 90075, 90085]],
+                ['name' => 'Delta Biscuit', 'manufacturer_id' => 1, 'price' => [50020, 50010, 50040, 40095, 50055, 50025, 50300]],
+                ['name' => 'Epsilon Jam',   'manufacturer_id' => 1, 'price' => [90080, 90065, 90090, 90040, 100010, 90075, 90085]],
             ],
         ];
 
@@ -44,12 +44,12 @@ class CatalogSeeder extends Seeder
                 $product = Product::factory()->create(attributes: [
                     'product_name'    => $productData['name'],
                     'category_id'     => $categoryId,
-                    'manufacturer_id' => $manufacturerModels[$productData['manufacturer_id']]->id,
+                    'manufacturer_id' => $manufacturerModels[$productData['manufacturer_id']]->manufacturer_id,
                 ]);
 
-                foreach ($productData['prices'] as $offset => $price) {
+                foreach ($productData['price'] as $offset => $price) {
                     Price::factory()->create(attributes: [
-                        'product_id' => $product->id,
+                        'product_id' => $product->product_id,
                         'price'      => $price,
                         'price_date' => $today->subDays(6 - $offset),
                     ]);

@@ -37,11 +37,11 @@ class ReportProcessSeeder extends Seeder
         );
 
         ReportProcess::factory()->failed()->create([
-            'category_id'       => 20,
-            'started_at'        => CarbonImmutable::now()->subHours(2),
-            'finished_at'       => CarbonImmutable::now()->subHours(2)->addMinutes(1),
-            'execution_time_ms' => 60_000,
-            'error_message'     => 'Unable to write file.',
+            'rp_category_id'           => 20,
+            'rp_start_datetime'        => CarbonImmutable::now()->subHours(2),
+            'rp_finish_datetime'       => CarbonImmutable::now()->subHours(2)->addMinutes(1),
+            'rp_exec_time'             => 60_000,
+            'rp_error_message'         => 'Unable to write file.',
         ]);
     }
 
@@ -66,17 +66,16 @@ class ReportProcessSeeder extends Seeder
         }
 
         $completedStatusId = ProcessStatus::query()
-            ->where('code', ReportProcessStatus::Completed->code())
-            ->value(column: 'id') ?? 1;
+            ->where('ps_name', ReportProcessStatus::Completed->label())
+            ->value(column: 'ps_id') ?? 1;
 
         ReportProcess::factory()->completed()->create([
-            'category_id'       => $categoryId,
-            'started_at'        => $startedAt,
-            'finished_at'       => $startedAt->addSeconds(42),
-            'execution_time_ms' => 42_000,
-            'status_id'         => $completedStatusId,
-            'file_name'         => $fileName,
-            'file_path'         => $filePath,
+            'rp_category_id'            => $categoryId,
+            'rp_start_datetime'         => $startedAt,
+            'rp_finish_datetime'        => $startedAt->addSeconds(42),
+            'rp_exec_time'              => 42_000,
+            'ps_id'                     => $completedStatusId,
+            'rp_file_save_path'         => $filePath,
         ]);
     }
 }

@@ -10,16 +10,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('process_statuses', function (Blueprint $table): void {
-            $table->id();
-            $table->string(column: 'code')->unique();
-            $table->string(column: 'name');
+        Schema::create('process_status', function (Blueprint $table): void {
+            $table->id(column: 'ps_id');
+            $table->string(column: 'ps_name')->unique();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('process_statuses');
+        Schema::dropIfExists('process_status');
     }
 };
