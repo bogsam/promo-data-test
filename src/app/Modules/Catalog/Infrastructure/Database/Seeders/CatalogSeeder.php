@@ -31,11 +31,9 @@ class CatalogSeeder extends Seeder
             'Acme Goods',
         ];
 
-        $manufacturerModels = array_map(function ($manufacturerName) {
-            return Manufacturer::factory()->create(attributes: [
-                'manufacturer_name' => $manufacturerName,
-            ]);
-        }, $manufacturers);
+        $manufacturerModels = array_map(callback: fn (string $manufacturerName) => Manufacturer::factory()->create(attributes: [
+            'manufacturer_name' => $manufacturerName,
+        ]), array: $manufacturers);
 
         $today = CarbonImmutable::now()->startOfDay();
 

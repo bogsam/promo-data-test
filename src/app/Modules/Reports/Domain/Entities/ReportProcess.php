@@ -14,12 +14,12 @@ use DateTimeInterface;
 final class ReportProcess
 {
     private function __construct(
-        private ?Id $id,
-        private int $pid,
-        private Id $categoryId,
-        private Period $period,
+        private readonly ?Id $id,
+        private readonly int $pid,
+        private readonly Id $categoryId,
+        private readonly Period $period,
         private ReportProcessStatus $status,
-        private DateTimeImmutable $startedAt,
+        private readonly DateTimeImmutable $startedAt,
         private ?DateTimeImmutable $finishedAt = null,
         private ?int $executionTimeInSeconds = null,
         private ?string $filePath = null,

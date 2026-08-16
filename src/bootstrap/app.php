@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(path: __DIR__))
         web: __DIR__ . '/../app/Modules/Core/Infrastructure/Routes/web.php',
         health: '/up',
     )
-    ->withMiddleware(static function (Middleware $middleware): void {
+    ->withMiddleware(callback: static function (Middleware $middleware): void {
         //
     })
     ->withExceptions(using: function (Exceptions $exceptions): void {

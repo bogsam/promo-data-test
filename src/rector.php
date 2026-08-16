@@ -13,7 +13,6 @@ return RectorConfig::configure()
         __DIR__ . '/app/Modules',
         __DIR__ . '/bootstrap',
         __DIR__ . '/config',
-        __DIR__ . '/routes',
     ])
     ->withCache(__DIR__ . '/.rector-cache')
     ->withParallel()

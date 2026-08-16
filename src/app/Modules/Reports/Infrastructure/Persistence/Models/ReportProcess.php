@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Carbon;
+use Override;
 
 /**
  * @property int $rp_id
@@ -91,8 +92,9 @@ class ReportProcess extends Model
         return $this->belongsTo(related: ProcessStatus::class, foreignKey: 'ps_id', ownerKey: 'ps_id');
     }
 
+    #[Override]
     public function resolveRouteBindingQuery($query, $value, $field = null): EloquentBuilder
     {
-        return parent::resolveRouteBindingQuery($query->with(relations: 'status'), $value, $field);
+        return parent::resolveRouteBindingQuery(query: $query->with(relations: 'status'), value: $value, field: $field);
     }
 }

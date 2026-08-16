@@ -18,20 +18,20 @@ final class ReportProcessDownloadControllerTest extends TestCase
     {
         $this->seed(ProcessStatusSeeder::class);
 
-        Storage::fake('local');
+        Storage::fake(disk: 'local');
         Storage::disk('local')->put('reports/report.csv', "foo,bar\n1,2\n");
 
         $reportProcess = ReportProcess::factory()
             ->completed()
-            ->create([
+            ->create(attributes: [
                 'rp_file_save_path' => 'reports/report.csv',
             ]);
 
         $response = $this->get("/report-processes/{$reportProcess->rp_id}/download");
 
         $response->assertOk();
-        $response->assertDownload('report.csv');
-        $response->assertHeader('content-type', 'text/csv; charset=utf-8');
+        $response->assertDownload(filename: 'report.csv');
+        $response->assertHeader(headerName: 'content-type', value: 'text/csv; charset=utf-8');
     }
 
     public function test_it_returns_not_found_for_missing_report_process(): void

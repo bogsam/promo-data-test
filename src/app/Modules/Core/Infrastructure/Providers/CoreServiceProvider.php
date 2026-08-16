@@ -17,8 +17,8 @@ class CoreServiceProvider extends ServiceProvider
             paths: app_path(path: 'Modules/Core/Infrastructure/Database/Migrations')
         );
 
-        if (! class_exists('Database\\Seeders\\DatabaseSeeder', false)) {
-            class_alias(DatabaseSeeder::class, 'Database\\Seeders\\DatabaseSeeder');
+        if (! class_exists(class: 'Database\\Seeders\\DatabaseSeeder', autoload: false)) {
+            class_alias(class: DatabaseSeeder::class, alias: 'Database\\Seeders\\DatabaseSeeder');
         }
     }
 }

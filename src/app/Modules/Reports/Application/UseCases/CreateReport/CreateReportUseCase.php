@@ -29,7 +29,7 @@ final readonly class CreateReportUseCase
 
         $reportProcess = ReportProcess::create(
             pid: $request->pid,
-            categoryId: new Id($request->categoryId),
+            categoryId: new Id(value: $request->categoryId),
             period: $period,
             startedAt: $request->startedAt,
         );

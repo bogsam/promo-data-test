@@ -26,7 +26,7 @@ final class GenerateReportCommandTest extends TestCase
             ->artisan('report:generate', ['category_id' => 42])
             ->assertExitCode(Command::SUCCESS);
 
-        $reportProcess = ReportProcess::query()->with('status')->sole();
+        $reportProcess = ReportProcess::query()->with(relations: 'status')->sole();
 
         self::assertSame(42, $reportProcess->rp_category_id);
         self::assertSame(ReportProcessStatus::Started->label(), $reportProcess->status->ps_name);
@@ -43,7 +43,7 @@ final class GenerateReportCommandTest extends TestCase
         $this
             ->artisan('report:generate', ['category_id' => 'milk'])
             ->expectsOutput('The category_id must be a positive integer.')
-            ->assertExitCode(Command::FAILURE);
+            ->assertExitCode(exitCode: Command::FAILURE);
 
         self::assertDatabaseCount('report_process', 0);
         Bus::assertNotDispatched(GenerateReportFileJob::class);

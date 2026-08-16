@@ -8,6 +8,7 @@ use App\Modules\Reports\Application\Contracts\ReportFileWriter;
 use App\Modules\Reports\Application\Data\GenerateReportFileData;
 use App\Modules\Reports\Application\Exceptions\ReportDataNotFoundException;
 use App\Modules\Reports\Application\Exceptions\ReportProcessNotFoundException;
+use App\Modules\Reports\Domain\Entities\ReportProcess;
 use App\Modules\Reports\Domain\Repositories\ReportProcessRepository;
 use App\Modules\Shared\Application\Contracts\CatalogReader;
 use App\Modules\Shared\Domain\ValueObjects\Id;
@@ -31,10 +32,10 @@ final readonly class GenerateReportFileUseCase
      */
     public function execute(GenerateReportFileRequest $request): GenerateReportFileResponse
     {
-        $reportProcess = $this->reportProcessRepository->findById(new Id($request->processId));
+        $reportProcess = $this->reportProcessRepository->findById(new Id(value: $request->processId));
 
-        if ($reportProcess === null) {
-            throw new ReportProcessNotFoundException($request->processId);
+        if (! $reportProcess instanceof ReportProcess) {
+            throw new ReportProcessNotFoundException(processId: $request->processId);
         }
 
         $reportProcess->markProcessing();

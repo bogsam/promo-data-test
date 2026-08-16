@@ -19,7 +19,7 @@ class ReportProcessSeeder extends Seeder
         $this->seedCompletedReport(
             categoryId: 10,
             manufacturerId: 1,
-            startedAt: CarbonImmutable::now()->subDay()->setTime(9, 30, 0),
+            startedAt: CarbonImmutable::now()->subDay()->setTime(hour: 9, minute: 30),
             fileRows: [
                 'Northwind Trading,Alpha Coffee Beans,10.75,2026-07-30 10:00:00',
                 'Northwind Trading,Alpha Coffee Beans,13.20,2026-07-30 18:00:00',
@@ -29,14 +29,14 @@ class ReportProcessSeeder extends Seeder
         $this->seedCompletedReport(
             categoryId: 20,
             manufacturerId: 2,
-            startedAt: CarbonImmutable::now()->subHours(5)->setTime(14, 15, 0),
+            startedAt: CarbonImmutable::now()->subHours(5)->setTime(hour: 14, minute: 15),
             fileRows: [
                 'Acme Goods,Delta Biscuit,4.95,2026-07-31 09:00:00',
                 'Acme Goods,Delta Biscuit,5.55,2026-07-31 17:00:00',
             ],
         );
 
-        ReportProcess::factory()->failed()->create([
+        ReportProcess::factory()->failed()->create(attributes: [
             'rp_category_id'           => 20,
             'rp_start_datetime'        => CarbonImmutable::now()->subHours(2),
             'rp_finish_datetime'       => CarbonImmutable::now()->subHours(2)->addMinutes(1),
@@ -54,9 +54,9 @@ class ReportProcessSeeder extends Seeder
         CarbonImmutable $startedAt,
         array $fileRows,
     ): void {
-        $fileName = sprintf('report_%d_%d_%s.csv', $manufacturerId, $categoryId, $startedAt->format('Y-m-d_H-i-s'));
+        $fileName = sprintf('report_%d_%d_%s.csv', $manufacturerId, $categoryId, $startedAt->format(format: 'Y-m-d_H-i-s'));
         $filePath = 'reports/' . $fileName;
-        $csv = implode(PHP_EOL, [
+        $csv = implode(separator: PHP_EOL, array: [
             'manufacturer_name,product_name,price,price_date',
             ...$fileRows,
         ]) . PHP_EOL;
@@ -69,7 +69,7 @@ class ReportProcessSeeder extends Seeder
             ->where('ps_name', ReportProcessStatus::Completed->label())
             ->value(column: 'ps_id') ?? 1;
 
-        ReportProcess::factory()->completed()->create([
+        ReportProcess::factory()->completed()->create(attributes: [
             'rp_category_id'            => $categoryId,
             'rp_start_datetime'         => $startedAt,
             'rp_finish_datetime'        => $startedAt->addSeconds(42),

@@ -6,7 +6,7 @@ namespace App\Modules\Catalog\Domain\Entities;
 
 use App\Modules\Shared\Domain\ValueObjects\Id;
 
-final class Manufacturer
+final readonly class Manufacturer
 {
     private function __construct(
         private ?Id $id,

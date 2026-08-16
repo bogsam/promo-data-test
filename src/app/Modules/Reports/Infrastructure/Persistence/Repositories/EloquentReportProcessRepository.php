@@ -26,7 +26,7 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
         $statusId = $this->resolveStatusId(status: $reportProcess->status());
         $attributes = $this->toAttributes(reportProcess: $reportProcess, statusId: $statusId);
 
-        if ($reportProcess->id() === null) {
+        if (! $reportProcess->id() instanceof Id) {
             $model = new ReportProcessModel(attributes: $attributes);
         } else {
             $model = ReportProcessModel::query()->findOrFail($reportProcess->id()->value());
@@ -35,7 +35,7 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
 
         $model->save();
 
-        return $this->toDomain($model);
+        return $this->toDomain(model: $model);
     }
 
     /**
@@ -105,9 +105,9 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
     private function toDomain(ReportProcessModel $model): ReportProcessEntity
     {
         return ReportProcessEntity::restore(
-            id: new Id($model->rp_id),
+            id: new Id(value: $model->rp_id),
             pid: $model->rp_pid,
-            categoryId: new Id($model->rp_category_id),
+            categoryId: new Id(value: $model->rp_category_id),
             period: Period::between(
                 from: $this->toDateTimeImmutable(value: $model->rp_period_from),
                 to: $this->toDateTimeImmutable(value: $model->rp_period_to),

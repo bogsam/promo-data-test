@@ -18,7 +18,7 @@ return new class extends Migration
             $table->dateTime(column: 'price_date')->index();
             $table->timestamps();
 
-            $table->index(['product_id', 'price_date', 'price'], 'price_product_date_price_idx');
+            $table->index(columns: ['product_id', 'price_date', 'price'], name: 'price_product_date_price_idx');
         });
     }
 

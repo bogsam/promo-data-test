@@ -8,7 +8,7 @@ use App\Modules\Shared\Domain\ValueObjects\Id;
 use App\Modules\Shared\Domain\ValueObjects\Money;
 use DateTimeImmutable;
 
-final class Price
+final readonly class Price
 {
     private function __construct(
         private ?Id $id,

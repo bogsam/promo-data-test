@@ -6,7 +6,7 @@ use App\Modules\Reports\Infrastructure\Http\Controllers\ReportProcessDownloadCon
 use App\Modules\Reports\Infrastructure\Http\Controllers\ReportProcessIndexController;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware('web')->group(static function (): void {
+Route::middleware('web')->group(callback: static function (): void {
     Route::get('/report-processes', ReportProcessIndexController::class)
         ->name(name: 'report-processes.index');
 

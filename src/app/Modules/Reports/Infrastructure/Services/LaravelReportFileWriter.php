@@ -41,7 +41,7 @@ final class LaravelReportFileWriter implements ReportFileWriter
         }
 
         try {
-            fputcsv(stream: $handle, fields: ['manufacturer_name', 'product_name', 'price', 'price_date']);
+            fputcsv(stream: $handle, fields: ['manufacturer_name', 'product_name', 'price', 'price_date'], escape: '\\');
 
             foreach ($data->productPriceData as $productPriceRow) {
                 fputcsv(stream: $handle, fields: [
@@ -49,7 +49,8 @@ final class LaravelReportFileWriter implements ReportFileWriter
                     $productPriceRow->productName,
                     $productPriceRow->price,
                     $productPriceRow->priceDate->format(format: 'Y-m-d H:i:s'),
-                ]);
+                ],
+                    escape: '\\');
             }
         } finally {
             fclose(stream: $handle);

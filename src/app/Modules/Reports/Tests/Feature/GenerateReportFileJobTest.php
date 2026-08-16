@@ -39,14 +39,14 @@ final class GenerateReportFileJobTest extends TestCase
     {
         parent::setUp();
 
-        Storage::fake('local');
+        Storage::fake(disk: 'local');
         $this->seed(ProcessStatusSeeder::class);
 
         $this->categoryId = 42;
-        $this->periodFrom = CarbonImmutable::parse('2026-08-08 10:00:00');
-        $this->periodTo = CarbonImmutable::parse('2026-08-15 10:00:00');
-        $this->startedAt = CarbonImmutable::parse('2026-08-15 10:00:00');
-        $this->reportProcess = ReportProcess::factory()->create([
+        $this->periodFrom = CarbonImmutable::parse(time: '2026-08-08 10:00:00');
+        $this->periodTo = CarbonImmutable::parse(time: '2026-08-15 10:00:00');
+        $this->startedAt = CarbonImmutable::parse(time: '2026-08-15 10:00:00');
+        $this->reportProcess = ReportProcess::factory()->create(attributes: [
             'rp_pid'             => 12345,
             'rp_category_id'     => $this->categoryId,
             'rp_period_from'     => $this->periodFrom,
@@ -66,7 +66,7 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->handleJob();
 
-        $this->reportProcess->refresh()->load('status');
+        $this->reportProcess->refresh()->load(relations: 'status');
 
         self::assertSame(ReportProcessStatus::Completed->label(), $this->reportProcess->status->ps_name);
         self::assertSame(
@@ -89,7 +89,7 @@ final class GenerateReportFileJobTest extends TestCase
      */
     public function test_it_writes_minimum_and_maximum_price_rows_for_each_product(): void
     {
-        $manufacturer = Manufacturer::factory()->create([
+        $manufacturer = Manufacturer::factory()->create(attributes: [
             'manufacturer_name' => 'Acme Labs',
         ]);
 
@@ -115,7 +115,7 @@ final class GenerateReportFileJobTest extends TestCase
         $this->handleJob();
 
         $content = Storage::disk('local')->get($this->reportProcess->refresh()->rp_file_save_path);
-        $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
+        $rows = array_map(callback: str_getcsv(...), array: array_filter(array: explode(separator: "\n", string: trim(string: $content))));
 
         self::assertSame([
             ['manufacturer_name', 'product_name', 'price', 'price_date'],
@@ -133,7 +133,7 @@ final class GenerateReportFileJobTest extends TestCase
      */
     public function test_it_ignores_prices_outside_report_period(): void
     {
-        $manufacturer = Manufacturer::factory()->create([
+        $manufacturer = Manufacturer::factory()->create(attributes: [
             'manufacturer_name' => 'Acme Labs',
         ]);
 
@@ -151,7 +151,7 @@ final class GenerateReportFileJobTest extends TestCase
         $this->handleJob();
 
         $content = Storage::disk('local')->get($this->reportProcess->refresh()->rp_file_save_path);
-        $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
+        $rows = array_map(callback: str_getcsv(...), array: array_filter(array: explode(separator: "\n", string: trim(string: $content))));
 
         self::assertSame([
             ['manufacturer_name', 'product_name', 'price', 'price_date'],
@@ -167,7 +167,7 @@ final class GenerateReportFileJobTest extends TestCase
      */
     public function test_it_ignores_products_from_other_categories(): void
     {
-        $manufacturer = Manufacturer::factory()->create([
+        $manufacturer = Manufacturer::factory()->create(attributes: [
             'manufacturer_name' => 'Acme Labs',
         ]);
 
@@ -192,7 +192,7 @@ final class GenerateReportFileJobTest extends TestCase
         $this->handleJob();
 
         $content = Storage::disk('local')->get($this->reportProcess->refresh()->rp_file_save_path);
-        $rows = array_map('str_getcsv', array_filter(explode("\n", trim($content))));
+        $rows = array_map(callback: str_getcsv(...), array: array_filter(array: explode(separator: "\n", string: trim(string: $content))));
 
         self::assertSame([
             ['manufacturer_name', 'product_name', 'price', 'price_date'],
@@ -215,7 +215,7 @@ final class GenerateReportFileJobTest extends TestCase
             self::assertSame('No reportable data found for category 42.', $exception->getMessage());
         }
 
-        $this->reportProcess->refresh()->load('status');
+        $this->reportProcess->refresh()->load(relations: 'status');
 
         self::assertSame(ReportProcessStatus::Failed->label(), $this->reportProcess->status->ps_name);
         self::assertSame('No reportable data found for category 42.', $this->reportProcess->rp_error_message);
@@ -225,23 +225,23 @@ final class GenerateReportFileJobTest extends TestCase
 
     private function createReportableProductPrices(): Manufacturer
     {
-        $manufacturer = Manufacturer::factory()->create([
+        $manufacturer = Manufacturer::factory()->create(attributes: [
             'manufacturer_name' => 'Acme Labs',
         ]);
 
-        $product = Product::factory()->create([
+        $product = Product::factory()->create(attributes: [
             'manufacturer_id' => $manufacturer->manufacturer_id,
             'category_id'     => $this->categoryId,
             'product_name'    => 'Promo Widget',
         ]);
 
-        Price::factory()->create([
+        Price::factory()->create(attributes: [
             'product_id' => $product->product_id,
             'price'      => 1000,
             'price_date' => '2026-08-10 10:00:00',
         ]);
 
-        Price::factory()->create([
+        Price::factory()->create(attributes: [
             'product_id' => $product->product_id,
             'price'      => 1500,
             'price_date' => '2026-08-12 10:00:00',
@@ -259,14 +259,14 @@ final class GenerateReportFileJobTest extends TestCase
         array $prices,
         ?int $categoryId = null,
     ): void {
-        $product = Product::factory()->create([
+        $product = Product::factory()->create(attributes: [
             'manufacturer_id' => $manufacturer->manufacturer_id,
             'category_id'     => $categoryId ?? $this->categoryId,
             'product_name'    => $productName,
         ]);
 
         foreach ($prices as $price) {
-            Price::factory()->create([
+            Price::factory()->create(attributes: [
                 'product_id' => $product->product_id,
                 'price'      => $price['amount'],
                 'price_date' => $price['date'],
@@ -282,6 +282,6 @@ final class GenerateReportFileJobTest extends TestCase
     private function handleJob(): void
     {
         new GenerateReportFileJob(processId: $this->reportProcess->rp_id)
-            ->handle($this->app->make(GenerateReportFileUseCase::class));
+            ->handle(useCase: $this->app->make(abstract: GenerateReportFileUseCase::class));
     }
 }
