@@ -13,7 +13,7 @@ return [
     ],
 
     'ses' => [
-        'key' => env(key: 'AWS_ACCESS_KEY_ID'),
+        'key'    => env(key: 'AWS_ACCESS_KEY_ID'),
         'secret' => env(key: 'AWS_SECRET_ACCESS_KEY'),
         'region' => env(key: 'AWS_DEFAULT_REGION', default: 'us-east-1'),
     ],
@@ -21,7 +21,7 @@ return [
     'slack' => [
         'notifications' => [
             'bot_user_oauth_token' => env(key: 'SLACK_BOT_USER_OAUTH_TOKEN'),
-            'channel' => env(key: 'SLACK_BOT_USER_DEFAULT_CHANNEL'),
+            'channel'              => env(key: 'SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
 

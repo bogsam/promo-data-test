@@ -11,36 +11,36 @@ use DateTimeImmutable;
 final class Price
 {
     private function __construct(
-        private ?Id               $id,
-        private Id                $productId,
-        private Money             $amount,
+        private ?Id $id,
+        private Id $productId,
+        private Money $amount,
         private DateTimeImmutable $priceDate,
     ) {}
 
     public static function create(
-        Id                $productId,
-        Money             $amount,
+        Id $productId,
+        Money $amount,
         DateTimeImmutable $priceDate,
     ): self {
         return new self(
-            id:        null,
+            id: null,
             productId: $productId,
-            amount:    $amount,
+            amount: $amount,
             priceDate: $priceDate,
         );
     }
 
     public static function restore(
-        Id                $id,
-        Id                $productId,
-        Money             $price,
+        Id $id,
+        Id $productId,
+        Money $price,
         DateTimeImmutable $priceDate,
     ): self {
         return new self(
-            id:         $id,
-            productId:  $productId,
-            amount:      $price,
-            priceDate:  $priceDate,
+            id: $id,
+            productId: $productId,
+            amount: $price,
+            priceDate: $priceDate,
         );
     }
 

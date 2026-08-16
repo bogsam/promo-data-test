@@ -10,7 +10,7 @@ use App\Modules\Shared\Domain\Exceptions\DomainException;
 final class ReportProcessTransitionNotAllowed extends DomainException
 {
     public function __construct(
-        ?int                $processId,
+        ?int $processId,
         ReportProcessStatus $currentStatus,
         ReportProcessStatus $targetStatus,
     ) {

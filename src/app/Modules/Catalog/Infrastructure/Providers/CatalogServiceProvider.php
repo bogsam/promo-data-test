@@ -16,7 +16,7 @@ class CatalogServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(CatalogRepository::class, EloquentCatalogRepository::class);
-        $this->app->bind(CatalogReader::class,     EloquentCatalogRepository::class);
+        $this->app->bind(CatalogReader::class, EloquentCatalogRepository::class);
 
         $this->loadMigrationsFrom(
             paths: app_path(path: 'Modules/Catalog/Infrastructure/Database/Migrations')

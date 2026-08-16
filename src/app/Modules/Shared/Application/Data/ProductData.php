@@ -9,10 +9,10 @@ use DateTimeImmutable;
 final readonly class ProductData
 {
     public function __construct(
-        public int               $manufacturerId,
-        public string            $manufacturerName,
-        public string            $productName,
-        public string            $price,
+        public int $manufacturerId,
+        public string $manufacturerName,
+        public string $productName,
+        public string $price,
         public DateTimeImmutable $priceDate,
     ) {}
 }

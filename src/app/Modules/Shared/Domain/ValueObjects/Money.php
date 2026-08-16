@@ -9,13 +9,14 @@ use Stringable;
 
 final readonly class Money implements Stringable
 {
-    public function __construct(private int $amount) {
+    public function __construct(private int $amount)
+    {
         if ($amount < 0) {
             throw new InvalidValueObjectData(
                 valueObject: self::class,
-                field:       'amount',
-                value:       $amount,
-                reason:      'Amount must be positive number.',
+                field: 'amount',
+                value: $amount,
+                reason: 'Amount must be positive number.',
             );
         }
     }
@@ -32,6 +33,6 @@ final readonly class Money implements Stringable
 
     public function __toString(): string
     {
-        return  sprintf('%.2f', $this->amount / 100);
+        return sprintf('%.2f', $this->amount / 100);
     }
 }

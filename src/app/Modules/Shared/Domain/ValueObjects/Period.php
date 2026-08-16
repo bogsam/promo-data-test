@@ -16,9 +16,9 @@ final readonly class Period
         if ($this->from > $this->to) {
             throw new InvalidValueObjectData(
                 valueObject: self::class,
-                field:       'range',
-                value:       sprintf('%s - %s', $this->from->format(format: DATE_ATOM), $this->to->format(format: DATE_ATOM)),
-                reason:      'Period start must not be later than period end.',
+                field: 'range',
+                value: sprintf('%s - %s', $this->from->format(format: DATE_ATOM), $this->to->format(format: DATE_ATOM)),
+                reason: 'Period start must not be later than period end.',
             );
         }
     }

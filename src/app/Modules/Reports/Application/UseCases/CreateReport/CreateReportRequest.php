@@ -9,8 +9,8 @@ use DateTimeImmutable;
 final readonly class CreateReportRequest
 {
     public function __construct(
-        public int               $pid,
-        public int               $categoryId,
+        public int $pid,
+        public int $categoryId,
         public DateTimeImmutable $startedAt,
     ) {}
 }

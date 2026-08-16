@@ -10,9 +10,9 @@ use DateTimeImmutable;
 final readonly class CreateReportResponse
 {
     public function __construct(
-        public int               $processId,
-        public int               $categoryId,
-        public string            $status,
+        public int $processId,
+        public int $categoryId,
+        public string $status,
         public DateTimeImmutable $startedAt,
         public DateTimeImmutable $periodFrom,
         public DateTimeImmutable $periodTo,
@@ -21,12 +21,12 @@ final readonly class CreateReportResponse
     public static function fromReportProcess(ReportProcess $reportProcess): self
     {
         return new self(
-            processId:  $reportProcess->id()->value(),
+            processId: $reportProcess->id()->value(),
             categoryId: $reportProcess->categoryId()->value(),
-            status:     $reportProcess->status()->value,
-            startedAt:  $reportProcess->startedAt(),
+            status: $reportProcess->status()->value,
+            startedAt: $reportProcess->startedAt(),
             periodFrom: $reportProcess->period()->from(),
-            periodTo:   $reportProcess->period()->to(),
+            periodTo: $reportProcess->period()->to(),
         );
     }
 }

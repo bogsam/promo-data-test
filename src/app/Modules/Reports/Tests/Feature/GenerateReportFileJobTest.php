@@ -47,11 +47,11 @@ final class GenerateReportFileJobTest extends TestCase
         $this->periodTo = CarbonImmutable::parse('2026-08-15 10:00:00');
         $this->startedAt = CarbonImmutable::parse('2026-08-15 10:00:00');
         $this->reportProcess = ReportProcess::factory()->create([
-            'pid' => 12345,
+            'pid'         => 12345,
             'category_id' => $this->categoryId,
             'period_from' => $this->periodFrom,
-            'period_to' => $this->periodTo,
-            'started_at' => $this->startedAt,
+            'period_to'   => $this->periodTo,
+            'started_at'  => $this->startedAt,
         ]);
     }
 
@@ -95,8 +95,8 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->createProductWithPrices(
             manufacturer: $manufacturer,
-            productName:  'Promo Widget',
-            prices:       [
+            productName: 'Promo Widget',
+            prices: [
                 ['amount' => 1200, 'date' => '2026-08-09 10:00:00'],
                 ['amount' => 1000, 'date' => '2026-08-10 10:00:00'],
                 ['amount' => 1500, 'date' => '2026-08-12 10:00:00'],
@@ -104,8 +104,8 @@ final class GenerateReportFileJobTest extends TestCase
         );
         $this->createProductWithPrices(
             manufacturer: $manufacturer,
-            productName:  'Promo Gadget',
-            prices:       [
+            productName: 'Promo Gadget',
+            prices: [
                 ['amount' => 9900, 'date' => '2026-08-09 10:00:00'],
                 ['amount' => 8750, 'date' => '2026-08-11 10:00:00'],
                 ['amount' => 10325, 'date' => '2026-08-13 10:00:00'],
@@ -139,8 +139,8 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->createProductWithPrices(
             manufacturer: $manufacturer,
-            productName:  'Promo Widget',
-            prices:       [
+            productName: 'Promo Widget',
+            prices: [
                 ['amount' => 100, 'date' => '2026-08-07 10:00:00'],
                 ['amount' => 1000, 'date' => '2026-08-10 10:00:00'],
                 ['amount' => 1500, 'date' => '2026-08-12 10:00:00'],
@@ -173,20 +173,20 @@ final class GenerateReportFileJobTest extends TestCase
 
         $this->createProductWithPrices(
             manufacturer: $manufacturer,
-            productName:  'Promo Widget',
-            prices:       [
+            productName: 'Promo Widget',
+            prices: [
                 ['amount' => 1000, 'date' => '2026-08-10 10:00:00'],
                 ['amount' => 1500, 'date' => '2026-08-12 10:00:00'],
             ],
         );
         $this->createProductWithPrices(
             manufacturer: $manufacturer,
-            productName:  'Other Category Widget',
-            prices:       [
+            productName: 'Other Category Widget',
+            prices: [
                 ['amount' => 100, 'date' => '2026-08-10 10:00:00'],
                 ['amount' => 999999, 'date' => '2026-08-12 10:00:00'],
             ],
-            categoryId:   99,
+            categoryId: 99,
         );
 
         $this->handleJob();
@@ -231,19 +231,19 @@ final class GenerateReportFileJobTest extends TestCase
 
         $product = Product::factory()->create([
             'manufacturer_id' => $manufacturer->id,
-            'category_id' => $this->categoryId,
-            'product_name' => 'Promo Widget',
+            'category_id'     => $this->categoryId,
+            'product_name'    => 'Promo Widget',
         ]);
 
         Price::factory()->create([
             'product_id' => $product->id,
-            'price' => 1000,
+            'price'      => 1000,
             'price_date' => '2026-08-10 10:00:00',
         ]);
 
         Price::factory()->create([
             'product_id' => $product->id,
-            'price' => 1500,
+            'price'      => 1500,
             'price_date' => '2026-08-12 10:00:00',
         ]);
 
@@ -261,14 +261,14 @@ final class GenerateReportFileJobTest extends TestCase
     ): void {
         $product = Product::factory()->create([
             'manufacturer_id' => $manufacturer->id,
-            'category_id' => $categoryId ?? $this->categoryId,
-            'product_name' => $productName,
+            'category_id'     => $categoryId ?? $this->categoryId,
+            'product_name'    => $productName,
         ]);
 
         foreach ($prices as $price) {
             Price::factory()->create([
                 'product_id' => $product->id,
-                'price' => $price['amount'],
+                'price'      => $price['amount'],
                 'price_date' => $price['date'],
             ]);
         }

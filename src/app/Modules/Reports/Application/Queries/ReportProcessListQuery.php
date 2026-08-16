@@ -20,7 +20,7 @@ final readonly class ReportProcessListQuery
     {
         return array_map(
             callback: ReportProcessListItemData::fromReportProcess(...),
-            array:    $this->reportProcessRepository->findLatest(),
+            array: $this->reportProcessRepository->findLatest(),
         );
     }
 }

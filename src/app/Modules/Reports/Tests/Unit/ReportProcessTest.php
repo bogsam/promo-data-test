@@ -43,7 +43,7 @@ final class ReportProcessTest extends TestCase
 
     public function test_restore_keeps_persisted_state(): void
     {
-        $startedAt  = new DateTimeImmutable('2026-08-15 10:00:00 UTC');
+        $startedAt = new DateTimeImmutable('2026-08-15 10:00:00 UTC');
         $finishedAt = new DateTimeImmutable('2026-08-15 10:07:30 UTC');
         $period = Period::between(
             new DateTimeImmutable('2026-08-01 00:00:00 UTC'),

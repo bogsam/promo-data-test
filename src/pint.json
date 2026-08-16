@@ -8,6 +8,9 @@
         "no_unused_imports": true,
         "concat_space": {
             "spacing": "one"
+        },
+        "binary_operator_spaces": {
+            "operators": {"=>": "align"}
         }
     }
 }

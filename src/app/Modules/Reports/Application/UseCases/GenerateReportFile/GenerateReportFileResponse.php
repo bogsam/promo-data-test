@@ -12,23 +12,23 @@ use RuntimeException;
 final readonly class GenerateReportFileResponse
 {
     public function __construct(
-        public int               $processId,
-        public int               $categoryId,
-        public int               $manufacturerId,
+        public int $processId,
+        public int $categoryId,
+        public int $manufacturerId,
         public DateTimeImmutable $startedAt,
         public DateTimeImmutable $periodFrom,
         public DateTimeImmutable $periodTo,
         public DateTimeImmutable $finishedAt,
-        public string            $filePath,
-        public string            $fileName,
-        public int               $rowsCount,
+        public string $filePath,
+        public string $fileName,
+        public int $rowsCount,
     ) {}
 
     public static function fromReportProcess(
         ReportProcess $reportProcess,
-        int           $manufacturerId,
-        string        $filePath,
-        int           $rowsCount,
+        int $manufacturerId,
+        string $filePath,
+        int $rowsCount,
     ): self {
         $id = $reportProcess->id();
 
@@ -37,16 +37,16 @@ final readonly class GenerateReportFileResponse
         }
 
         return new self(
-            processId:      $id->value(),
-            categoryId:     $reportProcess->categoryId()->value(),
+            processId: $id->value(),
+            categoryId: $reportProcess->categoryId()->value(),
             manufacturerId: $manufacturerId,
-            startedAt:      $reportProcess->startedAt(),
-            periodFrom:     $reportProcess->period()->from(),
-            periodTo:       $reportProcess->period()->to(),
-            finishedAt:     $reportProcess->finishedAt() ?? throw new RuntimeException(message: 'Report process finishedAt is missing.'),
-            filePath:       $filePath,
-            fileName:       basename(path: $filePath),
-            rowsCount:      $rowsCount,
+            startedAt: $reportProcess->startedAt(),
+            periodFrom: $reportProcess->period()->from(),
+            periodTo: $reportProcess->period()->to(),
+            finishedAt: $reportProcess->finishedAt() ?? throw new RuntimeException(message: 'Report process finishedAt is missing.'),
+            filePath: $filePath,
+            fileName: basename(path: $filePath),
+            rowsCount: $rowsCount,
         );
     }
 

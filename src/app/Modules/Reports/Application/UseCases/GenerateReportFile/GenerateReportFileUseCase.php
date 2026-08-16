@@ -19,10 +19,10 @@ use Throwable;
 final readonly class GenerateReportFileUseCase
 {
     public function __construct(
-        private ReportProcessRepository  $reportProcessRepository,
-        private CatalogReader            $catalogReader,
-        private ReportFileWriter         $reportFileWriter,
-        private LoggerInterface          $logger,
+        private ReportProcessRepository $reportProcessRepository,
+        private CatalogReader $catalogReader,
+        private ReportFileWriter $reportFileWriter,
+        private LoggerInterface $logger,
     ) {}
 
     /**
@@ -55,24 +55,24 @@ final readonly class GenerateReportFileUseCase
             $manufacturerId = $productData[0]->manufacturerId;
 
             $reportFileData = new GenerateReportFileData(
-                processId:          $reportProcess->id()?->value() ?? $request->processId,
-                categoryId:         $reportProcess->categoryId()->value(),
-                manufacturerId:     $manufacturerId,
-                startedAt:          $reportProcess->startedAt(),
-                productPriceData:   $productData,
+                processId: $reportProcess->id()?->value() ?? $request->processId,
+                categoryId: $reportProcess->categoryId()->value(),
+                manufacturerId: $manufacturerId,
+                startedAt: $reportProcess->startedAt(),
+                productPriceData: $productData,
             );
 
-            $filePath   = $this->reportFileWriter->write($reportFileData);
+            $filePath = $this->reportFileWriter->write($reportFileData);
             $finishedAt = new DateTimeImmutable;
 
             $reportProcess->markCompleted(filePath: $filePath, finishedAt: $finishedAt);
             $this->reportProcessRepository->save($reportProcess);
 
             return GenerateReportFileResponse::fromReportProcess(
-                reportProcess:  $reportProcess,
+                reportProcess: $reportProcess,
                 manufacturerId: $manufacturerId,
-                filePath:       $filePath,
-                rowsCount:      count(value: $productData),
+                filePath: $filePath,
+                rowsCount: count(value: $productData),
             );
 
         } catch (Throwable $throwable) {

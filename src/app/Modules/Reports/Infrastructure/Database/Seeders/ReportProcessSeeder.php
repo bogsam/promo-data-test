@@ -10,7 +10,6 @@ use App\Modules\Reports\Infrastructure\Persistence\Models\ReportProcess;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 use RuntimeException;
 
 class ReportProcessSeeder extends Seeder
@@ -18,9 +17,9 @@ class ReportProcessSeeder extends Seeder
     public function run(): void
     {
         $this->seedCompletedReport(
-            categoryId:     10,
+            categoryId: 10,
             manufacturerId: 1,
-            startedAt:      CarbonImmutable::now()->subDay()->setTime(9, 30, 0),
+            startedAt: CarbonImmutable::now()->subDay()->setTime(9, 30, 0),
             fileRows: [
                 'Northwind Trading,Alpha Coffee Beans,10.75,2026-07-30 10:00:00',
                 'Northwind Trading,Alpha Coffee Beans,13.20,2026-07-30 18:00:00',
@@ -28,9 +27,9 @@ class ReportProcessSeeder extends Seeder
         );
 
         $this->seedCompletedReport(
-            categoryId:     20,
+            categoryId: 20,
             manufacturerId: 2,
-            startedAt:      CarbonImmutable::now()->subHours(5)->setTime(14, 15, 0),
+            startedAt: CarbonImmutable::now()->subHours(5)->setTime(14, 15, 0),
             fileRows: [
                 'Acme Goods,Delta Biscuit,4.95,2026-07-31 09:00:00',
                 'Acme Goods,Delta Biscuit,5.55,2026-07-31 17:00:00',

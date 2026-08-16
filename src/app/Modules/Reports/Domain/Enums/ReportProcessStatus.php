@@ -6,10 +6,10 @@ namespace App\Modules\Reports\Domain\Enums;
 
 enum ReportProcessStatus: string
 {
-    case Started    = 'started';
+    case Started = 'started';
     case Processing = 'processing';
-    case Completed  = 'completed';
-    case Failed     = 'failed';
+    case Completed = 'completed';
+    case Failed = 'failed';
 
     public function label(): string
     {

@@ -11,33 +11,33 @@ return [
     'stores' => [
 
         'array' => [
-            'driver' => 'array',
+            'driver'    => 'array',
             'serialize' => false,
         ],
 
         'database' => [
-            'driver' => 'database',
-            'connection' => env(key: 'DB_CACHE_CONNECTION'),
-            'table' => env(key: 'DB_CACHE_TABLE', default: 'cache'),
+            'driver'          => 'database',
+            'connection'      => env(key: 'DB_CACHE_CONNECTION'),
+            'table'           => env(key: 'DB_CACHE_TABLE', default: 'cache'),
             'lock_connection' => env(key: 'DB_CACHE_LOCK_CONNECTION'),
-            'lock_table' => env(key: 'DB_CACHE_LOCK_TABLE'),
+            'lock_table'      => env(key: 'DB_CACHE_LOCK_TABLE'),
         ],
 
         'file' => [
-            'driver' => 'file',
-            'path' => storage_path(path: 'framework/cache/data'),
+            'driver'    => 'file',
+            'path'      => storage_path(path: 'framework/cache/data'),
             'lock_path' => storage_path(path: 'framework/cache/data'),
         ],
 
         'storage' => [
             'driver' => 'storage',
-            'disk' => env(key: 'CACHE_STORAGE_DISK'),
-            'path' => env(key: 'CACHE_STORAGE_PATH', default: 'framework/cache/data'),
+            'disk'   => env(key: 'CACHE_STORAGE_DISK'),
+            'path'   => env(key: 'CACHE_STORAGE_PATH', default: 'framework/cache/data'),
         ],
 
         'redis' => [
-            'driver' => 'redis',
-            'connection' => env(key: 'REDIS_CACHE_CONNECTION', default: 'cache'),
+            'driver'          => 'redis',
+            'connection'      => env(key: 'REDIS_CACHE_CONNECTION', default: 'cache'),
             'lock_connection' => env(key: 'REDIS_CACHE_LOCK_CONNECTION', default: 'default'),
         ],
 

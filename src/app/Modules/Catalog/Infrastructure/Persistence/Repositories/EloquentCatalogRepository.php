@@ -13,7 +13,7 @@ use App\Modules\Shared\Domain\ValueObjects\Period;
 use DateTimeImmutable;
 use Illuminate\Support\Facades\DB;
 
-final class EloquentCatalogRepository implements CatalogRepository, CatalogReader
+final class EloquentCatalogRepository implements CatalogReader, CatalogRepository
 {
     public function findProductDataByCategoryAndPeriod(Id $categoryId, Period $period): array
     {
@@ -60,11 +60,11 @@ final class EloquentCatalogRepository implements CatalogRepository, CatalogReade
             ->orderBy(column: 'sort_order')
             ->get()
             ->map(callback: static fn (object $row): ProductData => new ProductData(
-                manufacturerId:   (int) $row->manufacturer_id,
+                manufacturerId: (int) $row->manufacturer_id,
                 manufacturerName: (string) $row->manufacturer_name,
-                productName:      (string) $row->product_name,
-                price:            (string) new Money(amount: (int) $row->price),
-                priceDate:        new DateTimeImmutable(datetime: (string) $row->price_date),
+                productName: (string) $row->product_name,
+                price: (string) new Money(amount: (int) $row->price),
+                priceDate: new DateTimeImmutable(datetime: (string) $row->price_date),
             ))
             ->all();
     }

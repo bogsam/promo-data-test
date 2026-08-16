@@ -7,7 +7,6 @@ parameters:
         - app/Modules
         - bootstrap
         - config
-        - routes
     tmpDir: .phpstan.cache
     treatPhpDocTypesAsCertain: true
     reportUnmatchedIgnoredErrors: true

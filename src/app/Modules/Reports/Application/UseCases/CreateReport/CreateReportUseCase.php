@@ -24,14 +24,14 @@ final readonly class CreateReportUseCase
     {
         $period = Period::between(
             from: $request->startedAt->sub(interval: new DateInterval(duration: 'P7D')),
-            to:   $request->startedAt,
+            to: $request->startedAt,
         );
 
         $reportProcess = ReportProcess::create(
-            pid:        $request->pid,
+            pid: $request->pid,
             categoryId: new Id($request->categoryId),
-            period:     $period,
-            startedAt:  $request->startedAt,
+            period: $period,
+            startedAt: $request->startedAt,
         );
 
         $savedReportProcess = $this->reportProcessRepository->save($reportProcess);

@@ -36,9 +36,9 @@ class GenerateReportCommand extends Command
         try {
             $response = $this->createReportUseCase->execute(
                 request: new CreateReportRequest(
-                    pid:        getmypid(),
+                    pid: getmypid(),
                     categoryId: (int) $categoryId,
-                    startedAt:  CarbonImmutable::now()->toDateTimeImmutable(),
+                    startedAt: CarbonImmutable::now()->toDateTimeImmutable(),
                 ),
             );
 

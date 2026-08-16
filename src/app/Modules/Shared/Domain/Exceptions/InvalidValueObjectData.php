@@ -25,13 +25,13 @@ final class InvalidValueObjectData extends DomainException
     private function formatValue(mixed $value): string
     {
         return match (true) {
-            is_string(value: $value) => sprintf('"%s"', $value),
+            is_string(value: $value)                       => sprintf('"%s"', $value),
             is_int(value: $value), is_float(value: $value) => (string) $value,
-            is_bool(value: $value) => $value ? 'true' : 'false',
-            $value === null => 'null',
-            is_array(value: $value) => sprintf('array(%d)', count(value: $value)),
-            is_object(value: $value) => sprintf('object(%s)', $value::class),
-            default => gettype(value: $value),
+            is_bool(value: $value)                         => $value ? 'true' : 'false',
+            $value === null                                => 'null',
+            is_array(value: $value)                        => sprintf('array(%d)', count(value: $value)),
+            is_object(value: $value)                       => sprintf('object(%s)', $value::class),
+            default                                        => gettype(value: $value),
         };
     }
 }

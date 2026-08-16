@@ -6,6 +6,7 @@ namespace App\Modules\Reports\Infrastructure\Persistence\Models;
 
 use App\Modules\Reports\Infrastructure\Database\Factories\ReportFactory;
 use Barryvdh\LaravelIdeHelper\Eloquent;
+use Illuminate\Contracts\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Attributes\UseFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -91,7 +92,7 @@ class ReportProcess extends Model
         return $this->belongsTo(related: ProcessStatus::class, foreignKey: 'status_id');
     }
 
-    public function resolveRouteBindingQuery($query, $value, $field = null): Builder
+    public function resolveRouteBindingQuery($query, $value, $field = null): EloquentBuilder
     {
         return parent::resolveRouteBindingQuery($query->with(relations: 'status'), $value, $field);
     }

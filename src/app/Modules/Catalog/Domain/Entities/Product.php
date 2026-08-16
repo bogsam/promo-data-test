@@ -9,35 +9,35 @@ use App\Modules\Shared\Domain\ValueObjects\Id;
 final class Product
 {
     private function __construct(
-        private ?Id     $id,
-        private string  $productName,
-        private Id      $categoryId,
-        private Id      $manufacturerId,
+        private ?Id $id,
+        private string $productName,
+        private Id $categoryId,
+        private Id $manufacturerId,
     ) {}
 
     public static function create(
-        string  $productName,
-        Id      $categoryId,
-        Id      $manufacturerId,
+        string $productName,
+        Id $categoryId,
+        Id $manufacturerId,
     ): self {
         return new self(
-            id:             null,
-            productName:    $productName,
-            categoryId:     $categoryId,
+            id: null,
+            productName: $productName,
+            categoryId: $categoryId,
             manufacturerId: $manufacturerId,
         );
     }
 
     public static function restore(
-        Id      $id,
-        string  $productName,
-        Id      $categoryId,
-        Id      $manufacturerId,
+        Id $id,
+        string $productName,
+        Id $categoryId,
+        Id $manufacturerId,
     ): self {
         return new self(
-            id:             $id,
-            productName:    $productName,
-            categoryId:     $categoryId,
+            id: $id,
+            productName: $productName,
+            categoryId: $categoryId,
             manufacturerId: $manufacturerId,
         );
     }

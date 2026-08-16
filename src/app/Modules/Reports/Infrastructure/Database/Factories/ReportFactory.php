@@ -9,7 +9,6 @@ use App\Modules\Reports\Infrastructure\Persistence\Models\ProcessStatus;
 use App\Modules\Reports\Infrastructure\Persistence\Models\ReportProcess;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Str;
 
 /**
  * @extends Factory<ReportProcess>

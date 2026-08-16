@@ -14,57 +14,57 @@ use DateTimeInterface;
 final class ReportProcess
 {
     private function __construct(
-        private ?Id                 $id,
-        private int                 $pid,
-        private Id                  $categoryId,
-        private Period              $period,
+        private ?Id $id,
+        private int $pid,
+        private Id $categoryId,
+        private Period $period,
         private ReportProcessStatus $status,
-        private DateTimeImmutable   $startedAt,
-        private ?DateTimeImmutable  $finishedAt = null,
-        private ?int                $executionTimeInSeconds = null,
-        private ?string             $filePath = null,
-        private ?string             $errorMessage = null,
+        private DateTimeImmutable $startedAt,
+        private ?DateTimeImmutable $finishedAt = null,
+        private ?int $executionTimeInSeconds = null,
+        private ?string $filePath = null,
+        private ?string $errorMessage = null,
     ) {}
 
     public static function create(
-        int               $pid,
-        Id                $categoryId,
-        Period            $period,
+        int $pid,
+        Id $categoryId,
+        Period $period,
         DateTimeImmutable $startedAt,
     ): self {
         return new self(
-            id:         null,
-            pid:        $pid,
+            id: null,
+            pid: $pid,
             categoryId: $categoryId,
-            period:     $period,
-            status:     ReportProcessStatus::Started,
-            startedAt:  $startedAt,
+            period: $period,
+            status: ReportProcessStatus::Started,
+            startedAt: $startedAt,
         );
     }
 
     public static function restore(
-        Id                  $id,
-        int                 $pid,
-        Id                  $categoryId,
-        Period              $period,
+        Id $id,
+        int $pid,
+        Id $categoryId,
+        Period $period,
         ReportProcessStatus $status,
-        DateTimeImmutable   $startedAt,
-        ?DateTimeImmutable  $finishedAt = null,
-        ?int                $executionTimeInSeconds = null,
-        ?string             $filePath = null,
-        ?string             $errorMessage = null,
+        DateTimeImmutable $startedAt,
+        ?DateTimeImmutable $finishedAt = null,
+        ?int $executionTimeInSeconds = null,
+        ?string $filePath = null,
+        ?string $errorMessage = null,
     ): self {
         return new self(
-            id:                     $id,
-            pid:                    $pid,
-            categoryId:             $categoryId,
-            period:                 $period,
-            status:                 $status,
-            startedAt:              $startedAt,
-            finishedAt:             $finishedAt,
+            id: $id,
+            pid: $pid,
+            categoryId: $categoryId,
+            period: $period,
+            status: $status,
+            startedAt: $startedAt,
+            finishedAt: $finishedAt,
             executionTimeInSeconds: $executionTimeInSeconds,
-            filePath:               $filePath,
-            errorMessage:           $errorMessage,
+            filePath: $filePath,
+            errorMessage: $errorMessage,
         );
     }
 
@@ -132,11 +132,11 @@ final class ReportProcess
             targetStatus: ReportProcessStatus::Completed,
         );
 
-        $this->status                 = ReportProcessStatus::Completed;
-        $this->finishedAt             = $finishedAt;
+        $this->status = ReportProcessStatus::Completed;
+        $this->finishedAt = $finishedAt;
         $this->executionTimeInSeconds = $this->calculateExecutionTimeInSeconds(finishedAt: $finishedAt);
-        $this->filePath               = $filePath;
-        $this->errorMessage           = null;
+        $this->filePath = $filePath;
+        $this->errorMessage = null;
     }
 
     public function markFailed(string $errorMessage, DateTimeImmutable $finishedAt): void
@@ -146,11 +146,11 @@ final class ReportProcess
             targetStatus: ReportProcessStatus::Failed,
         );
 
-        $this->status                 = ReportProcessStatus::Failed;
-        $this->finishedAt             = $finishedAt;
+        $this->status = ReportProcessStatus::Failed;
+        $this->finishedAt = $finishedAt;
         $this->executionTimeInSeconds = $this->calculateExecutionTimeInSeconds(finishedAt: $finishedAt);
-        $this->filePath               = null;
-        $this->errorMessage           = $errorMessage;
+        $this->filePath = null;
+        $this->errorMessage = $errorMessage;
     }
 
     /**
@@ -163,9 +163,9 @@ final class ReportProcess
         }
 
         throw new ReportProcessTransitionNotAllowed(
-            processId:      $this->id?->value() ?? null,
-            currentStatus:  $this->status,
-            targetStatus:   $targetStatus,
+            processId: $this->id?->value() ?? null,
+            currentStatus: $this->status,
+            targetStatus: $targetStatus,
         );
     }
 

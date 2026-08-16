@@ -9,14 +9,14 @@ use App\Modules\Shared\Domain\ValueObjects\Id;
 final class Manufacturer
 {
     private function __construct(
-        private ?Id     $id,
-        private string  $manufacturerName,
+        private ?Id $id,
+        private string $manufacturerName,
     ) {}
 
     public static function create(string $manufacturerName): self
     {
         return new self(
-            id:               null,
+            id: null,
             manufacturerName: $manufacturerName,
         );
     }
@@ -24,7 +24,7 @@ final class Manufacturer
     public static function restore(Id $id, string $manufacturerName): self
     {
         return new self(
-            id:               $id,
+            id: $id,
             manufacturerName: $manufacturerName,
         );
     }

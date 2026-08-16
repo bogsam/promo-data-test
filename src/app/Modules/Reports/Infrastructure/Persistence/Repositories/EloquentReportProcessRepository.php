@@ -23,7 +23,7 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
      */
     public function save(ReportProcessEntity $reportProcess): ReportProcessEntity
     {
-        $statusId   = $this->resolveStatusId(status: $reportProcess->status());
+        $statusId = $this->resolveStatusId(status: $reportProcess->status());
         $attributes = $this->toAttributes(reportProcess: $reportProcess, statusId: $statusId);
 
         if ($reportProcess->id() === null) {
@@ -56,13 +56,12 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
 
     /**
      * @return list<ReportProcessEntity>
-     *
      */
     public function findLatest(): array
     {
         return ReportProcessModel::query()
             ->with(relations: 'status')
-            ->latest(column:  'started_at')
+            ->latest(column: 'started_at')
             ->get()
             ->map(callback: fn (ReportProcessModel $model): ReportProcessEntity => $this->toDomain(model: $model))
             ->all();
@@ -108,21 +107,21 @@ final class EloquentReportProcessRepository implements ReportProcessRepository
     private function toDomain(ReportProcessModel $model): ReportProcessEntity
     {
         return ReportProcessEntity::restore(
-            id:         new Id($model->id),
-            pid:        $model->pid,
+            id: new Id($model->id),
+            pid: $model->pid,
             categoryId: new Id($model->category_id),
-            period:     Period::between(
+            period: Period::between(
                 from: $this->toDateTimeImmutable(value: $model->period_from),
-                to:   $this->toDateTimeImmutable(value: $model->period_to),
+                to: $this->toDateTimeImmutable(value: $model->period_to),
             ),
-            status:                  ReportProcessStatus::from(value: $model->status->code),
-            startedAt:               $this->toDateTimeImmutable(value: $model->started_at),
-            finishedAt:              $model->finished_at !== null ? $this->toDateTimeImmutable(value: $model->finished_at) : null,
-            executionTimeInSeconds:  $model->execution_time_ms !== null
+            status: ReportProcessStatus::from(value: $model->status->code),
+            startedAt: $this->toDateTimeImmutable(value: $model->started_at),
+            finishedAt: $model->finished_at !== null ? $this->toDateTimeImmutable(value: $model->finished_at) : null,
+            executionTimeInSeconds: $model->execution_time_ms !== null
                 ? intdiv(num1: (int) $model->execution_time_ms, num2: 1000)
                 : null,
-            filePath:                $model->file_path,
-            errorMessage:            $model->error_message,
+            filePath: $model->file_path,
+            errorMessage: $model->error_message,
         );
     }
 

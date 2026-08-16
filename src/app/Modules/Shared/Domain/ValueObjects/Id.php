@@ -14,9 +14,9 @@ final readonly class Id implements Stringable
         if ($value <= 0) {
             throw new InvalidValueObjectData(
                 valueObject: self::class,
-                field:       'value',
-                value:       $value,
-                reason:      'Identifier must be a positive integer.',
+                field: 'value',
+                value: $value,
+                reason: 'Identifier must be a positive integer.',
             );
         }
     }
