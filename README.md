@@ -14,6 +14,7 @@
 - PHP 8.4
 - Laravel 13
 - PostgreSQL 15
+- Node.js/npm для сборки Vite-ассетов
 - Redis
 
 ## Установка
@@ -27,8 +28,6 @@ cp .env.example .env
 cp src/.env.example src/.env
 ```
 
-Корневой `.env` используется Docker Compose, а `src/.env` — Laravel-приложением внутри контейнера.
-
 4. Для первого запуска поднимите проект командой:
 
 ```bash
@@ -40,6 +39,21 @@ make install
 - ставит зависимости через Composer;
 - выполняет `php artisan migrate:fresh --seed`;
 - поднимает приложение по адресу из `HTTP_PORT` в `.env`.
+
+5. Сгенерируйте локальный ключ Laravel-приложения:
+
+```bash
+docker compose exec app php artisan key:generate
+```
+
+6. Соберите фронтовые ассеты:
+
+```bash
+cd src
+npm ci
+npm run build
+cd ..
+```
 
 ## Архитектура
 
